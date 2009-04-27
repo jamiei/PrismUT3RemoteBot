@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "UT3RemoteBot", "UT3RemoteBot\UT3RemoteBot.oxygene", "{CB0EF321-B0B5-4DCB-B858-719C45F96878}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB0EF321-B0B5-4DCB-B858-719C45F96878}.Debug|Default.ActiveCfg = Debug
+		{CB0EF321-B0B5-4DCB-B858-719C45F96878}.Debug|Default.Build.0 = Debug
+		{CB0EF321-B0B5-4DCB-B858-719C45F96878}.Release|Default.ActiveCfg = Release
+		{CB0EF321-B0B5-4DCB-B858-719C45F96878}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
