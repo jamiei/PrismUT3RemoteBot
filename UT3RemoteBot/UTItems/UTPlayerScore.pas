@@ -20,23 +20,24 @@ type
     var     _score: Integer;
     var     _lastUpdated: DateTime;
   assembly
-    method SetScore(NewScore: Integer);
-  assembly or protected
-    method ToString(): String;override;
-    method CompareTo(other: UTPlayerScore): Integer;
-  protected
-    method OnPropertyChanged(propName: String);virtual;
-  assembly
-    constructor UTPlayerScore(Id: UTIdentifier; Name: String; Score: Integer);
+    constructor(Id: UTIdentifier; Name: String; Score: Integer);
+
     property Id: UTIdentifier read get_Id;
-    method get_Id: UTIdentifier;
     property Name: String read get_Name;
-    method get_Name: String;
     property Score: Integer read get_Score;
-    method get_Score: Integer;
     property LastUpdated: DateTime read get_LastUpdated;
+
+    method SetScore(NewScore: Integer);
+    method OnPropertyChanged(propName: String);virtual;
+    method get_Id: UTIdentifier;
+    method get_Name: String;
+    method get_Score: Integer;
     method get_LastUpdated: DateTime;
+
     event PropertyChanged: PropertyChangedEventHandler;
+  public
+    method ToString: String; override;
+    method CompareTo(other: UTPlayerScore): Integer;
   end;
 
 
@@ -44,31 +45,31 @@ implementation
 
 method UTPlayerScore.SetScore(NewScore: Integer);
 begin
-  this._score := NewScore;
-  this._lastUpdated := DateTime.Now;
+  Self._score := NewScore;
+  Self._lastUpdated := DateTime.Now;
   OnPropertyChanged('Score')
 end;
 
 method UTPlayerScore.ToString(): String;
 begin
-  exit this._id.ToString().PadRight(30) + ' ' + this._name.PadRight(30) + ' ' + this._score
+  exit Self._id.ToString().PadRight(30) + ' ' + Self._name.PadRight(30) + ' ' + Self._score;
 end;
 
 method UTPlayerScore.CompareTo(other: UTPlayerScore): Integer;
 begin
-  if this._score > other._score then
+  if Self._score > other._score then
   begin
-    exit -1
+    exit -1;
   end
   else
   begin
-    if this._score < other._score then
+    if Self._score < other._score then
     begin
-      exit 1
+      exit 1;
     end
     else
     begin
-      exit this._id.CompareTo(other._id)
+      exit Self._id.CompareTo(other._id);
     end
   end
 end;
@@ -77,38 +78,38 @@ method UTPlayerScore.OnPropertyChanged(propName: String);
 begin
   if PropertyChanged <> nil then
   begin
-    PropertyChanged(this, new PropertyChangedEventArgs(propName))
+    PropertyChanged(Self, new PropertyChangedEventArgs(propName))
   end
   else
   begin
   end
 end;
 
-constructor UTPlayerScore.UTPlayerScore(Id: UTIdentifier; Name: String; Score: Integer);
+constructor UTPlayerScore(Id: UTIdentifier; Name: String; Score: Integer);
 begin
-  this._id := Id;
-  this._name := Name;
-  this._score := Score
+  Self._id := Id;
+  Self._name := Name;
+  Self._score := Score;
 end;
 
 method UTPlayerScore.get_Id: UTIdentifier;
 begin
-  exit this._id
+  Result := Self._id;
 end;
 
 method UTPlayerScore.get_Name: String;
 begin
-  exit this._name
+  Result := Self._name;
 end;
 
 method UTPlayerScore.get_Score: Integer;
 begin
-  exit this._score
+  Result := Self._score;
 end;
 
 method UTPlayerScore.get_LastUpdated: DateTime;
 begin
-  exit this._lastUpdated
+  Result := Self._lastUpdated;
 end;
 
 

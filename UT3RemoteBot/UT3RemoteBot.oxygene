@@ -54,12 +54,23 @@
   <ItemGroup>
     <Compile Include="BotCommands.pas" />
     <Compile Include="BotEvents.pas" />
-    <Compile Include="GameState.pas" />
     <Compile Include="Communications\Enums.pas" />
     <Compile Include="Communications\Global.pas" />
     <Compile Include="Communications\Message.pas" />
     <Compile Include="Communications\MessageHandler.pas" />
+    <Compile Include="Communications\MessageType.pas" />
     <Compile Include="Communications\UT3Connection.pas" />
+    <Compile Include="GameState.pas" />
+    <Compile Include="Properties\AssemblyInfo.pas" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.pas" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
+    <Compile Include="Properties\Settings.Designer.pas" />
+    <Compile Include="UTBot.pas" />
     <Compile Include="UTItems\UTBotOppState.pas" />
     <Compile Include="UTItems\UTBotSelfState.pas" />
     <Compile Include="UTItems\UTBotState.pas" />
@@ -73,16 +84,6 @@
     <Compile Include="UTItems\UTPlayerScore.pas" />
     <Compile Include="UTItems\UTPoint.pas" />
     <Compile Include="UTItems\UTVector.pas" />
-    <Compile Include="Properties\AssemblyInfo.pas" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.pas" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
-    <Compile Include="Properties\Settings.Designer.pas" />
-    <Compile Include="UTBot.pas" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.targets" />
 </Project>

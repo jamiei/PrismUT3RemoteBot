@@ -40,6 +40,9 @@ type
     //Create the commands and events
     //Start the running thread
     
+    method _vizConnection_OnErrorOccurred(sender: Object; e: TcpErrorEventArgs);
+    method _vizConnection_OnDataReceived(sender: Object; e: TcpDataEventArgs);
+    method _utConnection_OnErrorOccurred(sender: Object; e: TcpErrorEventArgs);
     method Disconnect();
     method GameErrorOccurred(sender: Object; e: TcpErrorEventArgs);
     method VisualizerErrorOccurred(sender: Object; e: TcpErrorEventArgs);
@@ -66,7 +69,7 @@ type
     
     method ProcessActions();virtual;
   assembly or protected
-    constructor UTBot(server: String; botName: String; botSkin: BotMesh; botColour: BotColor);
+    constructor(server: String; botName: String; botSkin: BotMesh; botColour: BotColor);
     /// <summary>
     /// Commands to control your bot
     /// </summary>
@@ -128,22 +131,22 @@ implementation
 
 method UTBot.Disconnect();
 begin
-  this._utConnection.Disconnect();
-  this._vizConnection.Disconnect();
-  this._isInGame := false;
-  this._isRunningBot := false
+  Self._utConnection.Disconnect();
+  Self._vizConnection.Disconnect();
+  Self._isInGame := false;
+  Self._isRunningBot := false
 end;
 
 method UTBot.GameErrorOccurred(sender: Object; e: TcpErrorEventArgs);
 begin
   Trace.WriteLine('There was a problem contacting the server.', &Global.TRACE_ERROR_CATEGORY);
-  this.Disconnect()
+  Self.Disconnect()
 end;
 
 method UTBot.VisualizerErrorOccurred(sender: Object; e: TcpErrorEventArgs);
 begin
   Trace.WriteLine('There was a problem contacting the visualizer server.', &Global.TRACE_ERROR_CATEGORY);
-  this.Disconnect()
+  Self.Disconnect()
 end;
 
 method UTBot.GameDataReceived(sender: Object; e: TcpDataEventArgs);
@@ -151,8 +154,8 @@ begin
   var messages: List<Message> := Message.FromData(System.Text.UTF7Encoding.UTF7.GetString(e.Data));
   for each msg: Message in messages do
   begin
-    ProcessEvent(msg)
-  end
+    ProcessEvent(msg);
+  end;
 end;
 
 method UTBot.VisualizerDataReceived(sender: Object; e: TcpDataEventArgs);
@@ -160,8 +163,8 @@ begin
   var messages: List<Message> := Message.FromData(System.Text.UTF7Encoding.UTF7.GetString(e.Data));
   for each msg: Message in messages do
   begin
-    ProcessVizEvent(msg)
-  end
+    ProcessVizEvent(msg);
+  end;
 end;
 
 method UTBot.ProcessEvent(msg: Message);
@@ -169,9 +172,6 @@ begin
   if msg = nil then
   begin
     exit
-  end
-  else
-  begin
   end;
   case msg.&Eventof
 case EventMessage.STATE:begin
@@ -368,14 +368,11 @@ end;
 
 method UTBot.Run();
 begin
-  while this._isRunningBotdo
+  while Self._isRunningBot do
   begin
-    if this._isInGame then
+    if Self._isInGame then
     begin
       ProcessActions()
-    end
-    else
-    begin
     end;
     Thread.Sleep(500)
   end
@@ -385,76 +382,88 @@ method UTBot.ProcessActions();
 begin
 end;
 
-constructor UTBot.UTBot(server: String; botName: String; botSkin: BotMesh; botColour: BotColor);
+constructor UTBot(server: String; botName: String; botSkin: BotMesh; botColour: BotColor);
 begin
-  this._server := server;
-  this._botName := botName;
-  this._botSkin := botSkin;
-  this._botColour := botColour;
-  this._isRunningBot := true;
-  this._isInGame := false;
+  Self._server := server;
+  Self._botName := botName;
+  Self._botSkin := botSkin;
+  Self._botColour := botColour;
+  Self._isRunningBot := true;
+  Self._isInGame := false;
   var tl: TextWriterTraceListener := new TextWriterTraceListener(Console.&Out);
   Trace.Listeners.&Add(tl);
-  this._utConnection := new UT3Connection(server, GAME_PORT);
-  this._utConnection.OnDataReceived := this._utConnection.OnDataReceived + new EventHandler<TcpDataEventArgs>(GameDataReceived);
-  this._utConnection.OnErrorOccurred := this._utConnection.OnErrorOccurred + new EventHandler<TcpErrorEventArgs>(GameErrorOccurred);
-  this._vizConnection := new UT3Connection(server, VISUAL_PORT);
-  this._vizConnection.OnDataReceived := this._vizConnection.OnDataReceived + new EventHandler<TcpDataEventArgs>(VisualizerDataReceived);
-  this._vizConnection.OnErrorOccurred := this._vizConnection.OnErrorOccurred + new EventHandler<TcpErrorEventArgs>(VisualizerErrorOccurred);
-  this._botCommands := new BotCommands(this, this._utConnection);
-  this._botEvents := new BotEvents(this);
-  this._gameState := new GameState();
-  this._selfState := new UTBotSelfState(new Message(''));
-  this._map := new UTMap(this._selfState);
-  this._mainThread := new Thread(new ThreadStart(Run));
-  this._mainThread.IsBackground := false;
-  this._mainThread.Start()
+  Self._utConnection := new UT3Connection(server, GAME_PORT);
+  Self._utConnection.OnDataReceived += @GameDataReceived;
+  Self._utConnection.OnErrorOccurred += @GameErrorReceived;
+  Self._vizConnection := new UT3Connection(server, VISUAL_PORT);
+  Self._vizConnection.OnDataReceived += @VisualizerDataReceived;
+  Self._vizConnection.OnErrorOccurred += @VisualizerErrorReceived;
+  Self._botCommands := new BotCommands(this, Self._utConnection);
+  Self._botEvents := new BotEvents(this);
+  Self._gameState := new GameState();
+  Self._selfState := new UTBotSelfState(new Message(''));
+  Self._map := new UTMap(Self._selfState);
+  Self._mainThread := new Thread(new ThreadStart(Run));
+  Self._mainThread.IsBackground := false;
+  Self._mainThread.Start()
 end;
 
 method UTBot.get_Commands: BotCommands;
 begin
-  exit this._botCommands
+  Result := Self._botCommands;
 end;
 
 method UTBot.get_Events: BotEvents;
 begin
-  exit this._botEvents
+  Result := Self._botEvents;
 end;
 
 method UTBot.get_GameState: GameState;
 begin
-  exit this._gameState
+  Result := Self._gameState;
 end;
 
 method UTBot.get_SelfState: UTBotSelfState;
 begin
-  exit this._selfState
+  Result := Self._selfState;
 end;
 
 method UTBot.get_GameMap: UTMap;
 begin
-  exit this._map
+  Result := Self._map;
 end;
 
 method UTBot.get_BotName: String;
 begin
-  exit _botName
+  Result := Self._botName;
 end;
 
 method UTBot.get_Server: String;
 begin
-  exit _server
+  Result := Self._server;
 end;
 
 method UTBot.get_IsInGame: Boolean;
 begin
-  exit _isInGame
+  Result := Self._isInGame;
 end;
 
 method UTBot.get_IsWorking: Boolean;
 begin
-  exit _isRunningBot
+  Result := Self._isRunningBot;
 end;
 
+
+method UTBot._utConnection_OnErrorOccurred(sender: Object; e: TcpErrorEventArgs);
+begin
+end;
+
+method UTBot._vizConnection_OnDataReceived(sender: Object; e: TcpDataEventArgs);
+begin
+end;
+
+method UTBot._vizConnection_OnErrorOccurred(sender: Object; e: TcpErrorEventArgs);
+begin
+end;
 
 end.

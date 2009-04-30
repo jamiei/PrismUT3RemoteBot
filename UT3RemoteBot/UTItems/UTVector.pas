@@ -1,4 +1,4 @@
-﻿namespace UT3RemoteBot.UTItems;
+﻿namespace UT3Bots.UTItems;
 
 interface
 
@@ -9,7 +9,7 @@ uses
   System.Text;
 
 type
-  UTVectors = public class
+  UTVector = public class
   private
     _x: Double;
     _y: Double;
@@ -40,38 +40,38 @@ type
 implementation
 
 {$REGION Property Get and Set'ers}
-method UTVectors.get_X: Double;
+method UTVector.get_X: Double;
 begin
   Result := _x;
 end;
 
-method UTVectors.set_X(value: Double);
+method UTVector.set_X(value: Double);
 begin
   Self._x := value;
 end;
 
-method UTVectors.get_Y: Double;
+method UTVector.get_Y: Double;
 begin
   Result := _y;
 end;
 
-method UTVectors.set_Y(value: Double);
+method UTVector.set_Y(value: Double);
 begin
   Self._y := value;
 end;
 
-method UTVectors.get_Z: Double;
+method UTVector.get_Z: Double;
 begin
   Result := _z;
 end;
 
-method UTVectors.set_Z(value: Double);
+method UTVector.set_Z(value: Double);
 begin
   Self._z := value;
 end;
 {$ENDREGION}
 
-constructor UTVectors(x, y, z: Double);
+constructor UTVector(x, y, z: Double);
 begin
   Self._x := x;
   Self._y := y;
@@ -84,7 +84,7 @@ end;
 /// </summary>
 /// <param name="a">The other UTVector to get the distance between</param>
 /// <returns></returns>
-method UTVectors.DistanceFrom(a: UTVector): Double;
+method UTVector.DistanceFrom(a: UTVector): Double;
 var
   distance, xx, yy, zz: Double;
 begin
@@ -98,17 +98,17 @@ begin
   Result := distance;
 end;
 
-method UTVectors.ToString: String;
+method UTVector.ToString: String;
 begin
   Result := String.Format('{1:E}, {1:E}, {1:E}', [Self._x, Self._y, Self._z]);
 end;
 
-method UTVectors.GetHashCode: integer;
+method UTVector.GetHashCode: integer;
 begin
-  Result := base.GetHashCode;
+  Result := inherited GetHashCode;
 end;
 
-method UTVectors.Equals(obj: Object): boolean;
+method UTVector.Equals(obj: Object): boolean;
 begin
   Result := False;
   if (obj is UTVector) then
@@ -120,23 +120,23 @@ begin
     end;
 end;
 
-class operator UTVectors.Equal(obj1, obj2: UTVector): boolean;
+class operator UTVector.Equal(obj1, obj2: UTVector): boolean;
 begin
   Result := False;
 
-  if System.Object.ReferenceEquals(a, b) then Result := True;
+  if System.Object.ReferenceEquals(obj1, obj2) then exit True;
 
-  if (((obj1 as Object) = nil) or ((obj1 as Object) = nil)) then Result := False;
+  if (((obj1 as Object) = nil) or ((obj1 as Object) = nil)) then exit False;
 
-  if ((obj1._x = obj2._x) and (obj1._y = obj2._y) and (obj1._z = obj2._z)) then Result := True;
+  if ((obj1._x = obj2._x) and (obj1._y = obj2._y) and (obj1._z = obj2._z)) then exit True;
 end;
 
-class operator UTVectors.NotEqual(obj1, obj2: UTVector): boolean;
+class operator UTVector.NotEqual(obj1, obj2: UTVector): boolean;
 begin
   Result := (obj1 <> obj2);
 end;
 
-method UTVectors.Parse(toParse: String): UTVector;
+method UTVector.Parse(toParse: String): UTVector;
 begin
   // Convert UTVector.Parse when the UT3Bots.Communications.Message class is translated.
 end;

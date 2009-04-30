@@ -259,7 +259,7 @@ type
   assembly
     //Constructor
     
-    constructor UTMap(theBot: UTBotSelfState);
+    constructor(theBot: UTBotSelfState);
     property NavPoints: List<UTNavPoint> read get_NavPoints;
     method get_NavPoints: List<UTNavPoint>;
     property InvItems: List<UTItemPoint> read get_InvItems;
@@ -271,24 +271,23 @@ implementation
 
 method UTMap.UpdateState(Message: Message);
 begin
-  if Message <> nil and Message.&Event = EventMessage.STATE then
+  if ((Message <> nil) and (Message.&Event = EventMessage.STATE)) then
   begin
-    case Message.Infoof
-case InfoMessage.NAV_INFO:begin
+    case (Message.Info) of
+      InfoMessage.NAV_INFO:
+      begin
         var nav: UTNavPoint := new UTNavPoint(new UTIdentifier(Message.Arguments[0]), UTVector.Parse(Message.Arguments[1]), Boolean.Parse(Message.Arguments[2]));
-        this._navList.&Add(nav);
+        Self._navList.&Add(nav);
         break;
       end;
-case InfoMessage.PICKUP_INFO:begin
+      InfoMessage.PICKUP_INFO:
+      begin
         var item: UTItemPoint := new UTItemPoint(new UTIdentifier(Message.Arguments[0]), UTVector.Parse(Message.Arguments[1]), Message.Arguments[2], Boolean.Parse(Message.Arguments[3]), Boolean.Parse(Message.Arguments[4]));
-        this._itemList.&Add(item);
+        Self._itemList.&Add(item);
         break;
       end;
-    end
-  end
-  else
-  begin
-  end
+    end; // case Message.Info of
+  end; // if ((Message..
 end;
 
 method UTMap.GetLocationFromId(Id: String): UTVector;
@@ -299,7 +298,7 @@ end;
 
 method UTMap.GetLocationFromId(Id: UTIdentifier): UTVector;
 begin
-  for each n: UTNavPoint in this._navList do
+  for each n: UTNavPoint in Self._navList do
   begin
     if n.Id = Id then
     begin
@@ -309,7 +308,7 @@ begin
     begin
     end
   end;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     if i.Id = Id then
     begin
@@ -319,260 +318,239 @@ begin
     begin
     end
   end;
-  exit nil
+  exit nil;
 end;
 
 method UTMap.GetNearestNavPoint(): UTNavPoint;
 begin
-  exit GetNearestNavPoint(_theBot.Location, nil)
+  Result := GetNearestNavPoint(_theBot.Location, nil);
 end;
 
 method UTMap.GetNearestNavPoint(toExclude: UTNavPoint): UTNavPoint;
 begin
-  exit GetNearestNavPoint(_theBot.Location, toExclude)
+  Result := GetNearestNavPoint(_theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestNavPoint(location: UTVector): UTNavPoint;
 begin
-  exit GetNearestNavPoint(location, nil)
+  Result :=  GetNearestNavPoint(location, nil);
 end;
 
 method UTMap.GetNearestNavPoint(location: UTVector; toExclude: UTNavPoint): UTNavPoint;
 begin
   var closest: UTNavPoint := nil;
   var closestDistance: Single := -1;
-  for each n: UTNavPoint in this._navList do
+  for each n: UTNavPoint in Self._navList do
   begin
     var myDistance: Single := n.Location.DistanceFrom(location);
-    if n <> toExclude and (myDistance < closestDistance or closestDistance < 0) then
+    if ((n <> toExclude) and (myDistance < closestDistance < 0)) then
     begin
       closest := n;
       closestDistance := myDistance
-    end
-    else
-    begin
-    end
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
 method UTMap.GetNearestItemPoint(): UTItemPoint;
 begin
-  exit GetNearestItemPoint(_theBot.Location, nil)
+  Result := GetNearestItemPoint(_theBot.Location, nil);
 end;
 
 method UTMap.GetNearestItemPoint(toExclude: UTItemPoint): UTItemPoint;
 begin
-  exit GetNearestItemPoint(_theBot.Location, toExclude)
+  Result := GetNearestItemPoint(_theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestItemPoint(location: UTVector): UTItemPoint;
 begin
-  exit GetNearestItemPoint(location, nil)
+  Result := GetNearestItemPoint(location, nil);
 end;
 
 method UTMap.GetNearestItemPoint(location: UTVector; toExclude: UTItemPoint): UTItemPoint;
 begin
   var closest: UTItemPoint := nil;
   var closestDistance: Single := -1;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     var myDistance: Single := i.Location.DistanceFrom(location);
-    if i <> toExclude and (myDistance < closestDistance or closestDistance < 0) then
+    if ((i <> toExclude) and (myDistance < closestDistance < 0)) then
     begin
       closest := i;
       closestDistance := myDistance
-    end
-    else
-    begin
-    end
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
 method UTMap.GetNearestItem(&type: ItemType): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, nil)
+  Result := GetNearestItem(&type, _theBot.Location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: ItemType; toExclude: UTItemPoint): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, toExclude)
+  Result := GetNearestItem(&type, _theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestItem(&type: ItemType; location: UTVector): UTItemPoint;
 begin
-  exit GetNearestItem(&type, location, nil)
+  Result := GetNearestItem(&type, location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: ItemType; location: UTVector; toExclude: UTItemPoint): UTItemPoint;
 begin
   var closest: UTItemPoint := nil;
   var closestDistance: Single := -1;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     var myDistance: Single := i.Location.DistanceFrom(location);
-    if i <> toExclude and (myDistance < closestDistance or closestDistance < 0) and i.Item.IsItem(&type) then
+    if ((i <> toExclude) and (myDistance < closestDistance < 0) and (i.Item.IsItem(&type))) then
     begin
       closest := i;
       closestDistance := myDistance
-    end
-    else
-    begin
-    end
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
 method UTMap.GetNearestItem(&type: WeaponType): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, nil)
+  Result := GetNearestItem(&type, _theBot.Location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: WeaponType; toExclude: UTItemPoint): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, toExclude)
+  Result := GetNearestItem(&type, _theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestItem(&type: WeaponType; location: UTVector): UTItemPoint;
 begin
-  exit GetNearestItem(&type, location, nil)
+  Result := GetNearestItem(&type, location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: WeaponType; location: UTVector; toExclude: UTItemPoint): UTItemPoint;
 begin
   var closest: UTItemPoint := nil;
   var closestDistance: Single := -1;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     var myDistance: Single := i.Location.DistanceFrom(location);
-    if i <> toExclude and (myDistance < closestDistance or closestDistance < 0) and i.Item.IsItem(&type) then
+    if ((i <> toExclude) and (myDistance < closestDistance < 0) and (i.Item.IsItem(&type))) then
     begin
       closest := i;
-      closestDistance := myDistance
-    end
-    else
-    begin
-    end
+      closestDistance := myDistance;
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
 method UTMap.GetNearestItem(&type: HealthType): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, nil)
+  Result := GetNearestItem(&type, _theBot.Location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: HealthType; toExclude: UTItemPoint): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, toExclude)
+  Result := GetNearestItem(&type, _theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestItem(&type: HealthType; location: UTVector): UTItemPoint;
 begin
-  exit GetNearestItem(&type, location, nil)
+  Result := GetNearestItem(&type, location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: HealthType; location: UTVector; toExclude: UTItemPoint): UTItemPoint;
 begin
   var closest: UTItemPoint := nil;
   var closestDistance: Single := -1;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     var myDistance: Single := i.Location.DistanceFrom(location);
-    if i <> toExclude and (myDistance < closestDistance or closestDistance < 0) and i.Item.IsItem(&type) then
+    if ((i <> toExclude) and (myDistance < closestDistance < 0) and (i.Item.IsItem(&type))) then
     begin
       closest := i;
-      closestDistance := myDistance
-    end
-    else
-    begin
-    end
+      closestDistance := myDistance;
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
 method UTMap.GetNearestItem(&type: AmmoType): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, nil)
+  Result := GetNearestItem(&type, _theBot.Location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: AmmoType; toExclude: UTItemPoint): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, toExclude)
+  Result := GetNearestItem(&type, _theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestItem(&type: AmmoType; location: UTVector): UTItemPoint;
 begin
-  exit GetNearestItem(&type, location, nil)
+  Result := GetNearestItem(&type, location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: AmmoType; location: UTVector; toExclude: UTItemPoint): UTItemPoint;
 begin
   var closest: UTItemPoint := nil;
   var closestDistance: Single := -1;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     var myDistance: Single := i.Location.DistanceFrom(location);
-    if i <> toExclude and (myDistance < closestDistance or closestDistance < 0) and i.Item.IsItem(&type) then
+    if ((i <> toExclude) and (myDistance < closestDistance < 0) and (i.Item.IsItem(&type))) then
     begin
       closest := i;
       closestDistance := myDistance
-    end
-    else
-    begin
-    end
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
 method UTMap.GetNearestItem(&type: ArmorType): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, nil)
+  Result := GetNearestItem(&type, _theBot.Location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: ArmorType; toExclude: UTItemPoint): UTItemPoint;
 begin
-  exit GetNearestItem(&type, _theBot.Location, toExclude)
+  Result := GetNearestItem(&type, _theBot.Location, toExclude);
 end;
 
 method UTMap.GetNearestItem(&type: ArmorType; location: UTVector): UTItemPoint;
 begin
-  exit GetNearestItem(&type, location, nil)
+  Result := GetNearestItem(&type, location, nil);
 end;
 
 method UTMap.GetNearestItem(&type: ArmorType; location: UTVector; toExclude: UTItemPoint): UTItemPoint;
 begin
   var closest: UTItemPoint := nil;
   var closestDistance: Single := -1;
-  for each i: UTItemPoint in this._itemList do
+  for each i: UTItemPoint in Self._itemList do
   begin
     var myDistance: Single := i.Location.DistanceFrom(location);
-    if i <> toExclude and (myDistance < closestDistance or closestDistance < 0) and i.Item.IsItem(&type) then
+    if ((i <> toExclude) and (myDistance < closestDistance < 0) and (i.Item.IsItem(&type))) then
     begin
       closest := i;
       closestDistance := myDistance
-    end
-    else
-    begin
-    end
+    end;
   end;
-  exit closest
+  Result := closest;
 end;
 
-constructor UTMap.UTMap(theBot: UTBotSelfState);
+constructor UTMap(theBot: UTBotSelfState);
 begin
-  this._theBot := theBot
+  Self._theBot := theBot;
 end;
 
 method UTMap.get_NavPoints: List<UTNavPoint>;
 begin
-  exit this._navList
+  Result := Self._navList;
 end;
 
 method UTMap.get_InvItems: List<UTItemPoint>;
 begin
-  exit this._itemList
+  Result := Self._itemList;
 end;
 
 

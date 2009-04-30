@@ -14,6 +14,7 @@ type
   public
     constructor;
     constructor (id: String);
+
     method ToString: String; override;
     method GetHashCode: integer; override;
     method Equals(obj: Object): boolean; override;
@@ -44,8 +45,7 @@ end;
 
 class operator UTIdentifier.Equal(obj1, obj2: UTIdentifier): boolean;
 begin
-
-  if (System.Object.ReferenceEquals(obj1, obj2)) then Result := True;
+  if (System.Object.ReferenceEquals(obj1, obj2)) then exit True;
 
   if (((obj1 as Object) = nil) or ((obj1 as Object) = nil)) then Result := False;
 

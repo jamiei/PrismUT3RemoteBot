@@ -15,15 +15,16 @@ type
   private
     var     _message: Message;
   assembly or protected
-    constructor MessageEventArgs(Message: Message);
+    constructor(Message: Message);
     property Message: Message read get_Message;
     method get_Message: Message;
   end;
 
-  MessageHandler = internal class
+  MessageHandler = assembly class
   private
     var     _connection: UT3Connection;
     var     _messageQueue: Queue<Message>;
+    method _connection_OnErrorOccurred(sender: Object; e: TcpErrorEventArgs);
   assembly
     method Disconnect();
   private
@@ -32,7 +33,7 @@ type
   assembly
     //Constructor
     
-    constructor MessageHandler(Server: String; Port: Integer);
+    constructor(Server: String; Port: Integer);
     property Connection: UT3Connection read get_Connection;
     method get_Connection: UT3Connection;
     property MessageQueue: Queue<Message> read get_MessageQueue;
@@ -43,62 +44,68 @@ type
 
 implementation
 
-constructor MessageEventArgs.MessageEventArgs(Message: Message);
+constructor MessageEventArgs(Message: Message);
 begin
-  this._message := Message
+  Self._message := Message
 end;
 
 method MessageEventArgs.get_Message: Message;
 begin
-  exit this._message
+  Result := Self._message
 end;
 
 method MessageHandler.Disconnect();
 begin
-  this._connection.Disconnect()
+  Self._connection.Disconnect()
 end;
 
 method MessageHandler.ErrorOccurred(sender: Object; e: TcpErrorEventArgs);
 begin
-  this.Disconnect()
+  Self.Disconnect()
 end;
 
 method MessageHandler.DataReceived(sender: Object; e: TcpDataEventArgs);
 begin
   var newMessages: List<Message> := Message.FromData(System.Text.UTF8Encoding.UTF8.GetString(e.Data, 0, e.Data.Length));
-  locking this._messageQueuedo
+  locking Self._messageQueue do
   begin
     for each m: Message in newMessages do
     begin
-      if m.IsEvent and this.OnEventReceived <> nil then
+      if (m.IsEvent and (Self.OnEventReceived <> nil)) then
       begin
-        OnEventReceived.Invoke(this, new MessageEventArgs(m))
+        OnEventReceived.Invoke(Self, new MessageEventArgs(m))
       end
       else
       begin
-        this._messageQueue.Enqueue(m)
+        Self._messageQueue.Enqueue(m)
       end
     end
   end
 end;
 
-constructor MessageHandler.MessageHandler(Server: String; Port: Integer);
+constructor MessageHandler(Server: String; Port: Integer);
 begin
-  this._messageQueue := new Queue<Message>();
-  this._connection := new UT3Connection(Server, Port);
-  this._connection.OnDataReceived := this._connection.OnDataReceived + new EventHandler<TcpDataEventArgs>(DataReceived);
-  this._connection.OnErrorOccurred := this._connection.OnErrorOccurred + new EventHandler<TcpErrorEventArgs>(ErrorOccurred)
+  Self._messageQueue := new Queue<Message>();
+  Self._connection := new UT3Connection(Server, Port);
+  Self._connection.OnDataReceived += @Self.DataReceived;
+  Self._connection.OnErrorOccurred += @Self.ErrorOccurred;
+  //Self._connection.OnDataReceived := Self._connection.OnDataReceived + new EventHandler<TcpDataEventArgs>(DataReceived);
+  //Self._connection.OnErrorOccurred := Self._connection.OnErrorOccurred + new EventHandler<TcpErrorEventArgs>(ErrorOccurred)
 end;
 
 method MessageHandler.get_Connection: UT3Connection;
 begin
-  exit this._connection
+  Result := Self._connection
 end;
 
 method MessageHandler.get_MessageQueue: Queue<Message>;
 begin
-  exit this._messageQueue
+  Result :=  Self._messageQueue
 end;
 
+
+method MessageHandler._connection_OnErrorOccurred(sender: Object; e: TcpErrorEventArgs);
+begin
+end;
 
 end.

@@ -166,76 +166,76 @@ implementation
 
 method BotCommands.StartFiring(useSecondaryFire: Boolean);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.FIRE, 'None', useSecondaryFire.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.FIRE, 'None', useSecondaryFire.ToString()))
 end;
 
 method BotCommands.StartFiring(Location: UTVector; useSecondaryFire: Boolean);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.FIRE, Location.ToString(), useSecondaryFire.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.FIRE, Location.ToString(), useSecondaryFire.ToString()))
 end;
 
 method BotCommands.StartFiring(Target: UTIdentifier; useSecondaryFire: Boolean);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.FIRE, Target.ToString(), useSecondaryFire.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.FIRE, Target.ToString(), useSecondaryFire.ToString()))
 end;
 
 method BotCommands.StopFiring();
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.STOP_FIRE))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.STOP_FIRE))
 end;
 
 method BotCommands.StopMoving();
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.STOP))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.STOP))
 end;
 
 method BotCommands.Jump();
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.JUMP))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.JUMP))
 end;
 
 method BotCommands.RunTo(Location: UTVector);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.RUN_TO, '0.0', '0.0', Location.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.RUN_TO, '0.0', '0.0', Location.ToString()))
 end;
 
 method BotCommands.RunTo(Target: UTIdentifier);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.RUN_TO, '0.0', '0.0', Target.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.RUN_TO, '0.0', '0.0', Target.ToString()))
 end;
 
 method BotCommands.StrafeTo(Location: UTVector; Target: UTIdentifier);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.STRAFE_TO, Location.ToString(), Target.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.STRAFE_TO, Location.ToString(), Target.ToString()))
 end;
 
 method BotCommands.StrafeTo(Location: UTVector; Target: UTVector);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.STRAFE_TO, Location.ToString(), Target.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.STRAFE_TO, Location.ToString(), Target.ToString()))
 end;
 
 method BotCommands.RotateTo(Location: UTVector);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_TO, Location.ToString(), 'Location'))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_TO, Location.ToString(), 'Location'))
 end;
 
 method BotCommands.RotateTo(Target: UTIdentifier);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_TO, Target.ToString(), 'Target'))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_TO, Target.ToString(), 'Target'))
 end;
 
 method BotCommands.RotateTo(Degrees: Integer);
 begin
   Degrees := Degrees mod 360;
   var units: Integer := Integer(((Degrees / 360) * 65535));
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_TO, units.ToString(), 'Rotation'))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_TO, units.ToString(), 'Rotation'))
 end;
 
 method BotCommands.RotateBy(Degrees: Integer);
 begin
   Degrees := Degrees mod 360;
   var units: Integer := Integer(((Degrees / 360) * 65535));
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_BY, units.ToString(), 'Horizontal'))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.ROTATE_BY, units.ToString(), 'Horizontal'))
 end;
 
 method BotCommands.SendChatMessage(Message: String; SendToTeam: Boolean);
@@ -243,60 +243,54 @@ begin
   Message := Message.Replace(#13, ' ');
   Message := Message.Replace(#10, ' ');
   Message := Message.Replace('|', ' ');
-  this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.SENDCHAT, Message, iif(SendToTeam, 'Team', 'Global')))
+  Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.SENDCHAT, Message, iif(SendToTeam, 'Team', 'Global')))
 end;
 
 method BotCommands.SendTauntMessage(Target: UTIdentifier);
 begin
   if Target <> nil then
   begin
-    this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.SENDTAUNT, Target.ToString()))
-  end
-  else
-  begin
-  end
+    Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.SENDTAUNT, Target.ToString()))
+  end;
 end;
 
 method BotCommands.PerformEmote(Emote: Emote);
 begin
-  this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.SENDEMOTE, Emote.GetStringValue()))
+  Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.SENDEMOTE, Emote.GetStringValue()))
 end;
 
 method BotCommands.SetMovingSpeed(UseWalk: Boolean);
 begin
-  this._utConnection.SendLine(Message.BuildMessage(CommandMessage.SETWALK, UseWalk.ToString()))
+  Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.SETWALK, UseWalk.ToString()))
 end;
 
 method BotCommands.ChangeWeapon();
 begin
-  this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.CHANGE_WEAPON, 'BEST'))
+  Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.CHANGE_WEAPON, 'BEST'))
 end;
 
 method BotCommands.ChangeWeapon(Weapon: UTIdentifier);
 begin
-  this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.CHANGE_WEAPON, Weapon.ToString()))
+  Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.CHANGE_WEAPON, Weapon.ToString()))
 end;
 
 method BotCommands.GetPath(Id: String; Target: UTIdentifier);
 begin
   if Target <> nil then
   begin
-    this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.GET_PATH, Id, Target.ToString()))
-  end
-  else
-  begin
-  end
+    Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.GET_PATH, Id, Target.ToString()))
+  end;
 end;
 
 method BotCommands.GetPath(Id: String; Location: UTVector);
 begin
-  this._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.GET_PATH, Id, Location.ToString()))
+  Self._utConnection.SendLine(Communications.Message.BuildMessage(CommandMessage.GET_PATH, Id, Location.ToString()))
 end;
 
-constructor (Bot: UTBot; Connection: UT3Connection);
+constructor BotCommands(Bot: UTBot; Connection: UT3Connection);
 begin
-  this._utBot := Bot;
-  this._utConnection := Connection
+  Self._utBot := Bot;
+  Self._utConnection := Connection
 end;
 
 

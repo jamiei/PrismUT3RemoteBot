@@ -26,9 +26,9 @@ type
     
     class method FromData(Data: String): List<Message>;
     class method BuildMessage(Command: CommandMessage; params Args: array of String): String;
-    constructor Message(message: String);
-    property &Event: EventMessage read get_&Event;
-    method get_&Event: EventMessage;
+    constructor(message: String);
+    property &Event: EventMessage read get_Event;
+    method get_Event: EventMessage;
     property Info: InfoMessage read get_Info;
     method get_Info: InfoMessage;
     property Arguments: array of String read get_Arguments;
@@ -63,9 +63,9 @@ begin
   exit sb.ToString()
 end;
 
-constructor Message.Message(message: String);
+constructor Message(message: String);
 begin
-  if message <> '' and message.EndsWith('EOM') then
+  if ((message <> '') and message.EndsWith('EOM')) then
   begin
     message := message.&Remove(message.Length - 3, 3);
     var tokens: List<String> := new List<String>(message.Split(MESSAGE_SEPARATOR));
@@ -99,7 +99,7 @@ begin
   end
 end;
 
-method Message.get_&Event: EventMessage;
+method Message.get_Event: EventMessage;
 begin
   exit _event
 end;

@@ -21,7 +21,7 @@ type
     var     _killer: UTIdentifier;
     var     _killed: UTIdentifier;
   assembly or protected
-    constructor HasDiedEventArgs(Killer: UTIdentifier; Killed: UTIdentifier);
+    constructor(Killer: UTIdentifier; Killed: UTIdentifier);
     /// <summary>
     /// The bot that killed the other one
     /// </summary>
@@ -47,7 +47,7 @@ type
     var     _velocity: UTVector;
     var     _isReachable: Boolean;
   assembly or protected
-    constructor SeenBotEventArgs(Id: UTIdentifier; Name: String; Team: String; Weapon: String; Rotation: UTVector; Location: UTVector; Velocity: UTVector; IsReachable: Boolean);
+    constructor(Id: UTIdentifier; Name: String; Team: String; Weapon: String; Rotation: UTVector; Location: UTVector; Velocity: UTVector; IsReachable: Boolean);
     /// <summary>
     /// The bot that you just saw
     /// </summary>
@@ -104,7 +104,7 @@ type
     var     _location: UTVector;
     var     _hitNormal: UTVector;
   assembly or protected
-    constructor BumpedEventArgs(Id: UTIdentifier; Location: UTVector; HitNormal: UTVector);
+    constructor(Id: UTIdentifier; Location: UTVector; HitNormal: UTVector);
     /// <summary>
     /// The id of the bot that you just bumped
     /// </summary>
@@ -131,7 +131,7 @@ type
     var     _location: UTVector;
     var     _loudness: Single;
   assembly or protected
-    constructor HeardSoundEventArgs(Id: UTIdentifier; Location: UTVector; Loudness: Single);
+    constructor(Id: UTIdentifier; Location: UTVector; Loudness: Single);
     /// <summary>
     /// The id of the thing that made the sound
     /// </summary>
@@ -160,7 +160,7 @@ type
     var     _damageType: String;
     var     _momentum: UTVector;
   assembly or protected
-    constructor DamagedEventArgs(Id: UTIdentifier; Location: UTVector; DamageAmount: Integer; DamageType: String; Momentum: UTVector);
+    constructor(Id: UTIdentifier; Location: UTVector; DamageAmount: Integer; DamageType: String; Momentum: UTVector);
     /// <summary>
     /// The Id of the thing that damaged you
     /// </summary>
@@ -200,7 +200,7 @@ type
     var     _isFromTeam: Boolean;
     var     _message: String;
   assembly or protected
-    constructor ChatEventArgs(Id: UTIdentifier; FromName: String; IsFromTeam: Boolean; Message: String);
+    constructor(Id: UTIdentifier; FromName: String; IsFromTeam: Boolean; Message: String);
     /// <summary>
     /// The Id of the bot that just sent a chat message
     /// </summary>
@@ -232,7 +232,7 @@ type
     var     _id: UTIdentifier;
     var     _fromName: String;
   assembly or protected
-    constructor TauntedEventArgs(Id: UTIdentifier; FromName: String);
+    constructor(Id: UTIdentifier; FromName: String);
     /// <summary>
     /// The Id of the bot that taunted you
     /// </summary>
@@ -252,7 +252,7 @@ type
     var     _didFall: Boolean;
     var     _location: UTVector;
   assembly or protected
-    constructor FallEventArgs(DidFall: Boolean; Location: UTVector);
+    constructor(DidFall: Boolean; Location: UTVector);
     /// <summary>
     /// True if you fell off the ledge, false if you didn't
     /// </summary>
@@ -272,7 +272,7 @@ type
     var     _id: UTIdentifier;
     var     _weaponClass: String;
   assembly or protected
-    constructor WeaponChangedEventArgs(Id: UTIdentifier; WeaponClass: String);
+    constructor(Id: UTIdentifier; WeaponClass: String);
     /// <summary>
     /// The Id of the weapon
     /// </summary>
@@ -292,7 +292,7 @@ type
     var     _item: UTItem;
     var     _wasDropped: Boolean;
   assembly or protected
-    constructor PickupEventArgs(Item: UTItem; WasFromDrop: Boolean);
+    constructor(Item: UTItem; WasFromDrop: Boolean);
     /// <summary>
     /// The item that you picked up
     /// </summary>
@@ -313,7 +313,7 @@ type
     var     _winnerName: String;
     var     _reason: String;
   assembly or protected
-    constructor MatchEndedEventArgs(WinnerId: UTIdentifier; WinnerName: String; Reason: String);
+    constructor(WinnerId: UTIdentifier; WinnerName: String; Reason: String);
     /// <summary>
     /// The Id of the bot that won the game
     /// </summary>
@@ -339,7 +339,7 @@ type
     var     _id: String;
     var     _nodes: List<UTNavPoint>;
   assembly or protected
-    constructor PathEventArgs(Id: String; Nodes: List<UTNavPoint>);
+    constructor(Id: String; Nodes: List<UTNavPoint>);
     /// <summary>
     /// The Id that you sent in the GetPath method
     /// </summary>
@@ -374,7 +374,7 @@ type
     method Trigger_OnMatchEnded(e: MatchEndedEventArgs);
     method Trigger_OnPathReceived(e: PathEventArgs);
   assembly or protected
-    constructor BotEvents(Bot: UTBot);
+    constructor(Bot: UTBot);
     /// <summary>
     /// Occurs when your bot spawns on the map after joining the game, and after dying
     /// </summary>
@@ -455,454 +455,409 @@ type
 
 implementation
 
-constructor BotSpawnedEventArgs.BotSpawnedEventArgs();
+constructor BotSpawnedEventArgs();
 begin
 end;
 
-constructor HasDiedEventArgs.HasDiedEventArgs(Killer: UTIdentifier; Killed: UTIdentifier);
+constructor HasDiedEventArgs(Killer: UTIdentifier; Killed: UTIdentifier);
 begin
-  this._killer := Killer;
-  this._killed := Killed
+  Self._killer := Killer;
+  Self._killed := Killed
 end;
 
 method HasDiedEventArgs.get_Killer: UTIdentifier;
 begin
-  exit _killer
+  Result := _killer;
 end;
 
 method HasDiedEventArgs.get_Killed: UTIdentifier;
 begin
-  exit _killed
+  Result := _killed;
 end;
 
-constructor SeenBotEventArgs.SeenBotEventArgs(Id: UTIdentifier; Name: String; Team: String; Weapon: String; Rotation: UTVector; Location: UTVector; Velocity: UTVector; IsReachable: Boolean);
+constructor SeenBotEventArgs(Id: UTIdentifier; Name: String; Team: String; Weapon: String; Rotation: UTVector; Location: UTVector; Velocity: UTVector; IsReachable: Boolean);
 begin
-  this._id := Id;
-  this._name := Name;
-  this._team := Team;
-  this._weapon := Weapon;
-  this._rotation := Rotation;
-  this._location := Location;
-  this._velocity := Velocity;
-  this._isReachable := IsReachable
+  Self._id := Id;
+  Self._name := Name;
+  Self._team := Team;
+  Self._weapon := Weapon;
+  Self._rotation := Rotation;
+  Self._location := Location;
+  Self._velocity := Velocity;
+  Self._isReachable := IsReachable
 end;
 
 method SeenBotEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method SeenBotEventArgs.get_Name: String;
 begin
-  exit _name
+  Result := _name;
 end;
 
 method SeenBotEventArgs.get_Team: String;
 begin
-  exit _team
+  Result := _team;
 end;
 
 method SeenBotEventArgs.get_Weapon: String;
 begin
-  exit _weapon
+  Result := _weapon;
 end;
 
 method SeenBotEventArgs.get_Rotation: UTVector;
 begin
-  exit _rotation
+  Result := _rotation;
 end;
 
 method SeenBotEventArgs.get_Location: UTVector;
 begin
-  exit _location
+  Result := _location;
 end;
 
 method SeenBotEventArgs.get_Velocity: UTVector;
 begin
-  exit _velocity
+  Result := _velocity;
 end;
 
 method SeenBotEventArgs.get_IsReachable: Boolean;
 begin
-  exit _isReachable
+  Result := _isReachable;
 end;
 
-constructor BumpedEventArgs.BumpedEventArgs(Id: UTIdentifier; Location: UTVector; HitNormal: UTVector);
+constructor BumpedEventArgs(Id: UTIdentifier; Location: UTVector; HitNormal: UTVector);
 begin
-  this._id := Id;
-  this._location := Location;
-  this._hitNormal := HitNormal
+  Self._id := Id;
+  Self._location := Location;
+  Self._hitNormal := HitNormal
 end;
 
 method BumpedEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result :=  _id;
 end;
 
 method BumpedEventArgs.get_Location: UTVector;
 begin
-  exit _location
+  Result := _location;
 end;
 
 method BumpedEventArgs.get_HitNormal: UTVector;
 begin
-  exit _hitNormal
+  Result := _hitNormal;
 end;
 
-constructor HeardSoundEventArgs.HeardSoundEventArgs(Id: UTIdentifier; Location: UTVector; Loudness: Single);
+constructor HeardSoundEventArgs(Id: UTIdentifier; Location: UTVector; Loudness: Single);
 begin
-  this._id := Id;
-  this._location := Location;
-  this._loudness := Loudness
+  Self._id := Id;
+  Self._location := Location;
+  Self._loudness := Loudness
 end;
 
 method HeardSoundEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method HeardSoundEventArgs.get_Location: UTVector;
 begin
-  exit _location
+  Result := _location;
 end;
 
 method HeardSoundEventArgs.get_Loudness: Single;
 begin
-  exit _loudness
+  Result := _loudness;
 end;
 
-constructor DamagedEventArgs.DamagedEventArgs(Id: UTIdentifier; Location: UTVector; DamageAmount: Integer; DamageType: String; Momentum: UTVector);
+constructor DamagedEventArgs(Id: UTIdentifier; Location: UTVector; DamageAmount: Integer; DamageType: String; Momentum: UTVector);
 begin
-  this._id := Id;
-  this._location := Location;
-  this._damageAmount := DamageAmount;
-  this._damageType := DamageType;
-  this._momentum := Momentum
+  Self._id := Id;
+  Self._location := Location;
+  Self._damageAmount := DamageAmount;
+  Self._damageType := DamageType;
+  Self._momentum := Momentum
 end;
 
 method DamagedEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method DamagedEventArgs.get_Location: UTVector;
 begin
-  exit _location
+  Result := _location;
 end;
 
 method DamagedEventArgs.get_DamageAmount: Integer;
 begin
-  exit _damageAmount
+  Result := _damageAmount;
 end;
 
 method DamagedEventArgs.get_DamageType: String;
 begin
-  exit _damageType
+  Result := _damageType;
 end;
 
 method DamagedEventArgs.get_Momentum: UTVector;
 begin
-  exit _momentum
+  Result := _momentum;
 end;
 
-constructor ChatEventArgs.ChatEventArgs(Id: UTIdentifier; FromName: String; IsFromTeam: Boolean; Message: String);
+constructor ChatEventArgs(Id: UTIdentifier; FromName: String; IsFromTeam: Boolean; Message: String);
 begin
-  this._id := Id;
-  this._fromName := FromName;
-  this._isFromTeam := IsFromTeam;
-  this._message := Message
+  Self._id := Id;
+  Self._fromName := FromName;
+  Self._isFromTeam := IsFromTeam;
+  Self._message := Message
 end;
 
 method ChatEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method ChatEventArgs.get_FromName: String;
 begin
-  exit _fromName
+  Result := _fromName;
 end;
 
 method ChatEventArgs.get_IsFromTeam: Boolean;
 begin
-  exit _isFromTeam
+  Result := _isFromTeam;
 end;
 
 method ChatEventArgs.get_Message: String;
 begin
-  exit _message
+  Result := _message;
 end;
 
-constructor TauntedEventArgs.TauntedEventArgs(Id: UTIdentifier; FromName: String);
+constructor TauntedEventArgs(Id: UTIdentifier; FromName: String);
 begin
-  this._id := Id;
-  this._fromName := FromName
+  Self._id := Id;
+  Self._fromName := FromName
 end;
 
 method TauntedEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method TauntedEventArgs.get_FromName: String;
 begin
-  exit _fromName
+  Result := _fromName;
 end;
 
 constructor FallEventArgs.FallEventArgs(DidFall: Boolean; Location: UTVector);
 begin
-  this._didFall := DidFall;
-  this._location := Location
+  Self._didFall := DidFall;
+  Self._location := Location
 end;
 
 method FallEventArgs.get_DidFall: Boolean;
 begin
-  exit _didFall
+  Result := _didFall;
 end;
 
 method FallEventArgs.get_Location: UTVector;
 begin
-  exit _location
+  Result := _location;
 end;
 
-constructor WeaponChangedEventArgs.WeaponChangedEventArgs(Id: UTIdentifier; WeaponClass: String);
+constructor WeaponChangedEventArgs(Id: UTIdentifier; WeaponClass: String);
 begin
-  this._id := Id;
-  this._weaponClass := WeaponClass
+  Self._id := Id;
+  Self._weaponClass := WeaponClass
 end;
 
 method WeaponChangedEventArgs.get_Id: UTIdentifier;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method WeaponChangedEventArgs.get_WeaponClass: String;
 begin
-  exit _weaponClass
+  Result := _weaponClass;
 end;
 
-constructor PickupEventArgs.PickupEventArgs(Item: UTItem; WasFromDrop: Boolean);
+constructor PickupEventArgs(Item: UTItem; WasFromDrop: Boolean);
 begin
-  this._item := Item;
-  this._wasDropped := WasFromDrop
+  Self._item := Item;
+  Self._wasDropped := WasFromDrop
 end;
 
 method PickupEventArgs.get_Item: UTItem;
 begin
-  exit _item
+  Result := _item;
 end;
 
 method PickupEventArgs.get_WasFromDrop: Boolean;
 begin
-  exit _wasDropped
+  Result := _wasDropped;
 end;
 
 constructor MatchEndedEventArgs.MatchEndedEventArgs(WinnerId: UTIdentifier; WinnerName: String; Reason: String);
 begin
-  this._winnerId := WinnerId;
-  this._winnerName := WinnerName;
-  this._reason := Reason
+  Self._winnerId := WinnerId;
+  Self._winnerName := WinnerName;
+  Self._reason := Reason
 end;
 
 method MatchEndedEventArgs.get_WinnerId: UTIdentifier;
 begin
-  exit _winnerId
+  Result := _winnerId;
 end;
 
 method MatchEndedEventArgs.get_WinnerName: String;
 begin
-  exit _winnerName
+  Result := _winnerName;
 end;
 
 method MatchEndedEventArgs.get_Reason: String;
 begin
-  exit _reason
+  Result := _reason;
 end;
 
-constructor PathEventArgs.PathEventArgs(Id: String; Nodes: List<UTNavPoint>);
+constructor PathEventArgs(Id: String; Nodes: List<UTNavPoint>);
 begin
-  this._id := Id;
-  this._nodes := Nodes
+  Self._id := Id;
+  Self._nodes := Nodes
 end;
 
 method PathEventArgs.get_Id: String;
 begin
-  exit _id
+  Result := _id;
 end;
 
 method PathEventArgs.get_Nodes: List<UTNavPoint>;
 begin
-  exit _nodes
+  Result := _nodes;
 end;
 
 method BotEvents.Trigger_OnSpawned(e: BotSpawnedEventArgs);
 begin
   if OnSpawned <> nil then
   begin
-    OnSpawned.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnSpawned.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnDied(e: HasDiedEventArgs);
 begin
   if OnDied <> nil then
   begin
-    OnDied.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnDied.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnOtherBotDied(e: HasDiedEventArgs);
 begin
   if OnOtherBotDied <> nil then
   begin
-    OnOtherBotDied.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnOtherBotDied.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnSeenOtherBot(e: SeenBotEventArgs);
 begin
   if OnSeenOtherBot <> nil then
   begin
-    OnSeenOtherBot.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnSeenOtherBot.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnBumped(e: BumpedEventArgs);
 begin
   if OnBumped <> nil then
   begin
-    OnBumped.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnBumped.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnBumpedWall(e: BumpedEventArgs);
 begin
   if OnBumpedWall <> nil then
   begin
-    OnBumpedWall.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnBumpedWall.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnHeardNoise(e: HeardSoundEventArgs);
 begin
   if OnHeardNoise <> nil then
   begin
-    OnHeardNoise.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnHeardNoise.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnDamaged(e: DamagedEventArgs);
 begin
   if OnDamaged <> nil then
   begin
-    OnDamaged.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnDamaged.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnReceivedChat(e: ChatEventArgs);
 begin
   if OnReceivedChat <> nil then
   begin
-    OnReceivedChat.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnReceivedChat.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnFoundFall(e: FallEventArgs);
 begin
   if OnFoundFall <> nil then
   begin
-    OnFoundFall.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnFoundFall.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnTaunted(e: TauntedEventArgs);
 begin
   if OnTaunted <> nil then
   begin
-    OnTaunted.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnTaunted.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnWeaponChanged(e: WeaponChangedEventArgs);
 begin
   if OnWeaponChanged <> nil then
   begin
-    OnWeaponChanged.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnWeaponChanged.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnGotPickup(e: PickupEventArgs);
 begin
   if OnGotPickup <> nil then
   begin
-    OnGotPickup.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnGotPickup.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnMatchEnded(e: MatchEndedEventArgs);
 begin
   if OnMatchEnded <> nil then
   begin
-    OnMatchEnded.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnMatchEnded.Invoke(Self._utBot, e)
+  end;
 end;
 
 method BotEvents.Trigger_OnPathReceived(e: PathEventArgs);
 begin
   if OnPathReceived <> nil then
   begin
-    OnPathReceived.Invoke(this._utBot, e)
-  end
-  else
-  begin
-  end
+    OnPathReceived.Invoke(Self._utBot, e)
+  end;
 end;
 
-constructor BotEvents.BotEvents(Bot: UTBot);
+constructor BotEvents(Bot: UTBot);
 begin
-  this._utBot := Bot
+  Self._utBot := Bot
 end;
 
 

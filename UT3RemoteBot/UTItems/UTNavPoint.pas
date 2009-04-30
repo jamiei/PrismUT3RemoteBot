@@ -13,14 +13,15 @@ type
   UTNavPoint = public class(UTPoint)
     //Constructor
     
-    constructor UTNavPoint(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
+    constructor (Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
   end;
 
 
 implementation
 
-constructor UTNavPoint.UTNavPoint(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
+constructor UTNavPoint(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
 begin
+  inherited constructor(Id, Location, IsReachable);
 end;
 
 

@@ -19,7 +19,7 @@ type
   assembly
     //Constructor
     
-    constructor UTItemPoint(Id: UTIdentifier; Location: UTVector; &Type: String; isReachable: Boolean; isReadyToPickup: Boolean);
+    constructor(Id: UTIdentifier; Location: UTVector; &Type: String; isReachable: Boolean; isReadyToPickup: Boolean);
     property Item: UTItem read get_Item;
     method get_Item: UTItem;
     property IsReadyToPickup: Boolean read get_IsReadyToPickup write set_IsReadyToPickup;
@@ -30,25 +30,26 @@ type
 
 implementation
 
-constructor UTItemPoint.UTItemPoint(Id: UTIdentifier; Location: UTVector; &Type: String; isReachable: Boolean; isReadyToPickup: Boolean);
+constructor UTItemPoint(Id: UTIdentifier; Location: UTVector; &Type: String; isReachable: Boolean; isReadyToPickup: Boolean);
 begin
-  this._isReadyToPickup := isReadyToPickup;
-  this._item := new UTItem(Id.ToString(), &Type)
+  inherited constructor(Id, Location, isReachable);
+  Self._isReadyToPickup := isReadyToPickup;
+  Self._item := new UTItem(Id.ToString(), &Type)
 end;
 
 method UTItemPoint.get_Item: UTItem;
 begin
-  exit this._item
+  Result := Self._item;
 end;
 
 method UTItemPoint.get_IsReadyToPickup: Boolean;
 begin
-  exit this._isReadyToPickup
+  Result := Self._isReadyToPickup;
 end;
 
 method UTItemPoint.set_IsReadyToPickup(value: Boolean);
 begin
-  this._isReadyToPickup := value;
+  Self._isReadyToPickup := value;
   OnPropertyChanged('IsReadyToPickup')
 end;
 

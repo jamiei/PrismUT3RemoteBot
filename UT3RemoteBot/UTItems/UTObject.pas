@@ -19,7 +19,7 @@ type
   assembly or protected
     //Constructor
     
-    constructor UTObject(Id: UTIdentifier; Location: UTVector);
+    constructor(Id: UTIdentifier; Location: UTVector);
     /// <summary>
     /// The unique UT3 game Id of this object
     /// </summary>
@@ -43,32 +43,29 @@ method UTObject.OnPropertyChanged(propName: String);
 begin
   if PropertyChanged <> nil then
   begin
-    PropertyChanged(this, new PropertyChangedEventArgs(propName))
-  end
-  else
-  begin
-  end
+    PropertyChanged(Self, new PropertyChangedEventArgs(propName));
+  end;
 end;
 
-constructor UTObject.UTObject(Id: UTIdentifier; Location: UTVector);
+constructor UTObject(Id: UTIdentifier; Location: UTVector);
 begin
-  this._id := Id;
-  this._location := Location
+  Self._id := Id;
+  Self._location := Location
 end;
 
 method UTObject.get_Id: UTIdentifier;
 begin
-  exit this._id
+  Result := Self._id
 end;
 
 method UTObject.get_Location: UTVector;
 begin
-  exit this._location
+  Result := Self._location
 end;
 
 method UTObject.set_Location(value: UTVector);
 begin
-  this._location := value;
+  Self._location := value;
   OnPropertyChanged('Location')
 end;
 

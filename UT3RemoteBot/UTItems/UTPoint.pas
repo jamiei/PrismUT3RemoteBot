@@ -16,7 +16,7 @@ type
   assembly
     //Constructor
     
-    constructor UTPoint(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
+    constructor(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
     /// <summary>
     /// True if the bot can run straight to this point, False if there is something in the way
     /// </summary>
@@ -28,14 +28,15 @@ type
 
 implementation
 
-constructor UTPoint.UTPoint(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
+constructor UTPoint(Id: UTIdentifier; Location: UTVector; IsReachable: Boolean);
 begin
-  this._isReachable := IsReachable
+  inherited constructor(Id, Location);
+  Self._isReachable := IsReachable
 end;
 
 method UTPoint.get_IsReachable: Boolean;
 begin
-  exit this._isReachable
+  Result := Self._isReachable
 end;
 
 
