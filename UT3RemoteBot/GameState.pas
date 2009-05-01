@@ -101,27 +101,22 @@ begin
   case (msg.Info) of
     InfoMessage.BEGIN: 
         Self.Clear;
-    InfoMessage.END: 
-        break;
-    InfoMessage.GAME_INFO: 
-        break;
+    InfoMessage.END: ;
+    InfoMessage.GAME_INFO: ;
     InfoMessage.NAV_INFO: 
         begin
           var nav: UTNavPoint := new UTNavPoint(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Boolean.Parse(msg.Arguments[2]));
           Self._navList.&Add(nav);
-          break;
         end;
     InfoMessage.PICKUP_INFO: 
         begin
           var item: UTItemPoint := new UTItemPoint(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), msg.Arguments[2], Boolean.Parse(msg.Arguments[3]), Boolean.Parse(msg.Arguments[4]));
           Self._invList.&Add(item);
-          break;
         end;
     InfoMessage.PLAYER_INFO: 
         begin
           var playerSeen: UTBotOppState := new UTBotOppState(msg);
-          Self._oppList.&Add(playerSeen);
-          break;        
+          Self._oppList.&Add(playerSeen);       
         end;
     InfoMessage.SCORE_INFO: 
         begin
@@ -131,7 +126,6 @@ begin
             RemoveOldScores();
             _lastCheckTime := DateTime.Now
           end;
-          break;
         end;
     InfoMessage.SELF_INFO: 
         begin
@@ -139,7 +133,6 @@ begin
           begin
             Self._selfId := new UTIdentifier(msg.Arguments[0])
           end;
-          break;
         end;
   end; // case (msg.Info) of
 end;

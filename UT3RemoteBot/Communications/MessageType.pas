@@ -8,7 +8,8 @@ uses
   System.Linq,
   System.Text,
   System.Diagnostics,
-  System.Reflection;
+  System.Reflection,
+  System.Runtime.CompilerServices;
 
 type
   [AttributeUsage(AttributeTargets.Field)]
@@ -17,7 +18,7 @@ type
       _stringvalue: string;
     public
       property StringValue: string read _stringvalue write _stringvalue;
-      constructor (value: String);
+      constructor(value: String);
   end;
 
   EventMessage = assembly enum(
@@ -279,6 +280,7 @@ type
 		GAME_INFO
     );
 
+  [Extension]
   Extensions = assembly static class
   private
     class var     EventMessages: Dictionary<String, EventMessage>;
@@ -287,10 +289,24 @@ type
     class var     AmmoTypes: Dictionary<String, AmmoType>;
     class var     HealthTypes: Dictionary<String, HealthType>;
     class var     ArmorTypes: Dictionary<String, ArmorType>;
-    class method GetNames(t: &Type): array of String;
   assembly
+    [Extension]
     class method GetStringValue(value : &Enum): String;
-      constructor;
+    [Extension]
+    class method GetNames(t: &Type): array of String;
+    [Extension]
+    class method GetAsEvent(value: String): EventMessage;
+    [Extension]
+    class method GetAsInfo(value: String): InfoMessage;
+    [Extension]
+    class method GetAsWeaponType(value: String): WeaponType;
+    [Extension]
+    class method GetAsAmmoType(value: String): AmmoType;
+    [Extension]
+    class method GetAsHealthType(value: String): HealthType;
+    [Extension]
+    class method GetAsArmorType(value: String): ArmorType;
+    constructor;
   end;
 
 
@@ -361,5 +377,40 @@ begin
   end
 end;
 
+
+class method Extensions.GetAsEvent(value: String): EventMessage;
+begin
+  if (EventMessages.ContainsKey(value)) then Result := EventMessages[value] else Result := EventMessage.None;
+end;
+
+class method Extensions.GetAsInfo(value: String): InfoMessage;
+begin
+  if (InfoMessages.ContainsKey(value)) then Result := InfoMessages[value] else Result := InfoMessage.None;
+end;
+
+class method Extensions.GetAsWeaponType(value: String): WeaponType;
+begin
+  if (WeaponTypes.ContainsKey(value)) then Result := WeaponTypes[value] else Result := WeaponType.None;
+end;
+
+class method Extensions.GetAsAmmoType(value: String): AmmoType;
+begin
+  if (AmmoTypes.ContainsKey(value)) then Result := AmmoTypes[value] else Result := AmmoType.None;
+end;
+
+class method Extensions.GetAsHealthType(value: String): HealthType;
+begin
+  if (HealthTypes.ContainsKey(value)) then Result := HealthTypes[value] else Result := HealthType.None;
+end;
+
+class method Extensions.GetAsArmorType(value: String): ArmorType;
+begin
+  if (ArmorTypes.ContainsKey(value)) then Result := ArmorTypes[value] else Result := ArmorType.None;
+end;
+
+constructor StringValueAttribute(value: String);
+begin
+  Self._stringvalue := value;
+end;
 
 end.

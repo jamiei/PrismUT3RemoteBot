@@ -278,13 +278,11 @@ begin
       begin
         var nav: UTNavPoint := new UTNavPoint(new UTIdentifier(Message.Arguments[0]), UTVector.Parse(Message.Arguments[1]), Boolean.Parse(Message.Arguments[2]));
         Self._navList.&Add(nav);
-        break;
       end;
       InfoMessage.PICKUP_INFO:
       begin
         var item: UTItemPoint := new UTItemPoint(new UTIdentifier(Message.Arguments[0]), UTVector.Parse(Message.Arguments[1]), Message.Arguments[2], Boolean.Parse(Message.Arguments[3]), Boolean.Parse(Message.Arguments[4]));
         Self._itemList.&Add(item);
-        break;
       end;
     end; // case Message.Info of
   end; // if ((Message..

@@ -94,7 +94,7 @@ method UTItem.ToString(): String;
 begin
   case Self.ItemType of 
     ItemType.Ammo: 
-       case (Self.ActualClass as AmmoType) of
+       case (AmmoType(Self.ActualClass)) of
          AmmoType.Avril: Result := 'Anvil ammo';
          AmmoType.BioRifle: Result := 'Bio rifle ammo';
          AmmoType.Enforcer: Result := 'Enforcer ammo';
@@ -107,7 +107,7 @@ begin
          else Result := 'Unknown';
        end; // case
     ItemType.Armor: 
-      case (Self.ActualClass as ArmorType) of
+      case (ArmorType(Self.ActualClass)) of
         ArmorType.Berserk: Result := 'Beserk Powerup';
         ArmorType.ChestArmour: Result := 'Chest Armour';
         ArmorType.Helmet: Result := 'Helmet';
@@ -120,7 +120,7 @@ begin
         else Result := 'Unknown';
       end; // case
     ItemType.Health: 
-      case (Self.ActualClass as HealthType) of
+      case (HealthType(Self.ActualClass)) of
         HealthType.BigKegOHealth: Result := 'Big Keg o Health';
         HealthType.HealthVial: Result := 'Health Vial';
         HealthType.MediBox: Result := 'Medi box';
@@ -128,7 +128,7 @@ begin
         else Result := 'Unknown';
       end; // case
     ItemType.Weapon: 
-      case (Self.ActualClass as WeaponType) of
+      case (WeaponType(Self.ActualClass)) of
         WeaponType.Avril: Result := 'Avril';
         WeaponType.BioRifle: Result := 'Bio Rifle';
         WeaponType.Enforcer: Result := 'Enforcer';

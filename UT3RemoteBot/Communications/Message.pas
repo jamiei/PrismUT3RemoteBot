@@ -11,7 +11,7 @@ uses
   System.Text,
   System.Diagnostics;
 type
-  Message = assembly class(EventArgs)
+  Message = public class(EventArgs)
     const     MESSAGE_SEPARATOR: Char = '|';
     const     MESSAGE_SUBSEPARATOR: Char = ',';
     const     MESSAGE_EOL: Char = '@';

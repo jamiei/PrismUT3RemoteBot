@@ -168,6 +168,8 @@ begin
 end;
 
 method UTBot.ProcessEvent(msg: Message);
+var
+   i: Integer;
 begin
   if msg = nil then
   begin
@@ -181,7 +183,6 @@ begin
         begin
           Self._botEvents.Trigger_OnBumped(new BumpedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), UTVector.Parse(msg.Arguments[2])))
         end;
-        break;
       end;
     EventMessage.CHAT: 
       begin
@@ -189,7 +190,6 @@ begin
         begin
           Self._botEvents.Trigger_OnReceivedChat(new ChatEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], Boolean.Parse(msg.Arguments[2]), msg.Arguments[3]))
         end;
-        break;
       end;
     EventMessage.DAMAGED:
       begin
@@ -197,13 +197,11 @@ begin
         begin
           Self._botEvents.Trigger_OnDamaged(new DamagedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Integer.Parse(msg.Arguments[2]), msg.Arguments[3], UTVector.Parse(msg.Arguments[4])))
         end;
-        break;
       end;
     EventMessage.DIED: 
       begin
         Self._isInGame := false;
         Self._botEvents.Trigger_OnDied(new HasDiedEventArgs(new UTIdentifier(msg.Arguments[0]), Self._id));
-        break;
       end;
     EventMessage.FOUNDFALL: 
       begin
@@ -211,7 +209,6 @@ begin
         begin
           Self._botEvents.Trigger_OnFoundFall(new FallEventArgs(Boolean.Parse(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1])))
         end;
-        break;
       end;
     EventMessage.GOT_PICKUP: 
       begin
@@ -219,7 +216,6 @@ begin
         begin
           Self._botEvents.Trigger_OnGotPickup(new PickupEventArgs(Self._selfState.AddInventoryItem(msg), Boolean.Parse(msg.Arguments[2])))
         end;
-        break;
       end;
     EventMessage.HEARD_NOISE: 
       begin
@@ -227,7 +223,6 @@ begin
         begin
           Self._botEvents.Trigger_OnHeardNoise(new HeardSoundEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Single.Parse(msg.Arguments[2])))
         end;
-        break;
       end;
     EventMessage.HIT_WALL: 
       begin
@@ -235,25 +230,21 @@ begin
         begin
           Self._botEvents.Trigger_OnBumpedWall(new BumpedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), UTVector.Parse(msg.Arguments[2])))
         end;
-        break;
       end;
     EventMessage.INFO: 
       begin
         Trace.WriteLine('Connected to Server ' + _server, &Global.TRACE_NORMAL_CATEGORY);
         Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.INITIALIZE, Self._botName, Self._botSkin.ToString(), (Integer(Self._botColour)).ToString()));
-        break;
       end;
     EventMessage.KILLED:
       begin
         Self._botEvents.Trigger_OnOtherBotDied(new HasDiedEventArgs(new UTIdentifier(msg.Arguments[0]), new UTIdentifier(msg.Arguments[1])));
-        break;
       end;
     EventMessage.MATCH_ENDED: 
       begin
         Self._isInGame := false;
         Self._botEvents.Trigger_OnMatchEnded(new MatchEndedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], msg.Arguments[2]));
         PerformGameOver();
-        break;
       end;
     EventMessage.PATH: 
       begin
@@ -262,8 +253,8 @@ begin
           var id: String := msg.Arguments[0];
           var nodes: List<UTNavPoint> := new List<UTNavPoint>();
           begin;
-            i: Integer := 1;
-            while (i < msg.Arguments.Length) do 
+            i := 1;
+            while (i < msg.Arguments.Length) do
             begin
               nodes.&Add(new UTNavPoint(new UTIdentifier(msg.Arguments[i]), UTVector.Parse(msg.Arguments[i + 1]), true));
               i := i + 2;
@@ -271,7 +262,6 @@ begin
           end;
           Self._botEvents.Trigger_OnPathReceived(new PathEventArgs(id, nodes))
         end;
-        break;
       end;
     EventMessage.SEEN_PLAYER: 
       begin
@@ -280,14 +270,12 @@ begin
           var isReachable: Boolean := not String.IsNullOrEmpty(msg.Arguments[7]);
           Self._botEvents.Trigger_OnSeenOtherBot(new SeenBotEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], msg.Arguments[2], msg.Arguments[3], UTVector.Parse(msg.Arguments[4]), UTVector.Parse(msg.Arguments[5]), UTVector.Parse(msg.Arguments[6]), isReachable))
         end;
-        break;
       end;
     EventMessage.SPAWNED: 
       begin
         Self._id := new UTIdentifier(msg.Arguments[1]);
         Self._botEvents.Trigger_OnSpawned(new BotSpawnedEventArgs());
         Self._isInGame := true;
-        break;
       end;
     EventMessage.STATE: 
       begin
@@ -296,7 +284,6 @@ begin
           Self._selfState.UpdateState(msg)
         end;
         Self._gameState.UpdateGameState(msg);
-        break;
       end;
     EventMessage.TAUNTED: 
       begin
@@ -304,12 +291,10 @@ begin
         begin
           Self._botEvents.Trigger_OnTaunted(new TauntedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1]))
         end;
-        break;
       end;
     EventMessage.WAITING_FOR_SPAWN: 
       begin
         Trace.WriteLine('Match Not Started. Waiting For Spawn...', &Global.TRACE_NORMAL_CATEGORY);
-        break;
       end;
     EventMessage.WEAPON_CHANGED: 
       begin
@@ -317,7 +302,6 @@ begin
         begin
           Self._botEvents.Trigger_OnWeaponChanged(new WeaponChangedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1]))
         end;
-        break;
       end;
   end; // case (msg.Event) of
 end;
@@ -337,7 +321,6 @@ begin
         begin
           Self._map.UpdateState(msg)
         end;
-        break;
       end;
   end; // case (msg.Event) of
 end;
