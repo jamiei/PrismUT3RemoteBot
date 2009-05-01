@@ -1,8 +1,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <RootNamespace>UT3RemoteBot</RootNamespace>
     <OutputType>Library</OutputType>
-    <AssemblyName>UT3RemoteBot</AssemblyName>
+    <AssemblyName>UT3Bots.RemoteBot</AssemblyName>
     <AllowGlobals>False</AllowGlobals>
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <AllowLegacyCreate>False</AllowLegacyCreate>
