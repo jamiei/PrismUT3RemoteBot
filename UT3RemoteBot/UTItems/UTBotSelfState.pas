@@ -46,7 +46,7 @@ type
     
     method IsCloseTo(toObject: UTObject): Boolean;
   assembly
-    constructor UTBotSelfState(Msg: Message);
+    constructor(Msg: Message);
     /// <summary>
     /// Ammo count for your currently selected weapon
     /// </summary>
@@ -60,12 +60,9 @@ implementation
 
 method UTBotSelfState.UpdateState(selfMessage: Message);
 begin
-  if self.Message <> nil and self.Message.Info = InfoMessage.SELF_INFO and self.Message.Arguments.Length = 12 then
+  if ((selfMessage <> nil) and (selfMessage.Info = InfoMessage.SELF_INFO) and (selfMessage.Arguments.Length = 12)) then
   begin
     self._currentAmmo := Integer.Parse(selfMessage.Arguments[11])
-  end
-  else
-  begin
   end;
   inherited UpdateState(selfMessage)
 end;
@@ -75,83 +72,71 @@ begin
   var newItem: UTItem := new UTItem(msg);
   if newItem.IsItem(ItemType.Weapon) then
   begin
-    if this._inventory.ContainsKey(WeaponType(newItem.ActualClass)) then
+    if Self._inventory.ContainsKey(WeaponType(newItem.ActualClass)) then
     begin
-      this._inventory[WeaponType(newItem.ActualClass)] := _id
+      Self._inventory[WeaponType(newItem.ActualClass)] := _id;
     end
     else
     begin
-      this._inventory.&Add(WeaponType(newItem.ActualClass), _id)
-    end
-  end
-  else
-  begin
+      Self._inventory.&Add(WeaponType(newItem.ActualClass), _id);
+    end;
   end;
-  exit newItem
+  exit newItem;
 end;
 
 method UTBotSelfState.GetInvetoryItemID(&type: WeaponType): UTIdentifier;
 begin
-  exit this._inventory[&type]
+  Result := Self._inventory[&type]
 end;
 
 method UTBotSelfState.HasWeapon(&type: WeaponType): Boolean;
 begin
-  exit this._inventory.ContainsKey(&type)
+  Result := Self._inventory.ContainsKey(&type)
 end;
 
 method UTBotSelfState.IsCloseTo(location: UTVector): Boolean;
 begin
-  var dist: Single := this._location.DistanceFrom(location);
+  var dist: Single := Self._location.DistanceFrom(location);
   if dist <= 200 then
   begin
-    exit true
-  end
-  else
-  begin
+    exit true;
   end;
-  exit false
+  exit false;
 end;
 
 method UTBotSelfState.IsCloseTo(toObject: UTObject): Boolean;
 begin
-  var dist: Single := this._location.DistanceFrom(toObject.Location);
+  var dist: Single := Self._location.DistanceFrom(toObject.Location);
   if dist <= 200 then
   begin
-    exit true
-  end
-  else
-  begin
+    exit true;
   end;
-  exit false
+  exit false;
 end;
 
-constructor UTBotSelfState.UTBotSelfState(Msg: Message);
+constructor UTBotSelfState(Msg: Message);
 begin
-  if Msg.Info = InfoMessage.PLAYER_INFO and Msg.Arguments.Length = 12 then
+  if ((Msg.Info = InfoMessage.PLAYER_INFO) and (Msg.Arguments.Length = 12)) then
   begin
-    this._id := new UTIdentifier(Msg.Arguments[0]);
-    this._location := UTVector.Parse(Msg.Arguments[1]);
-    this._rotation := UTVector.Parse(Msg.Arguments[2]);
-    this._velocity := UTVector.Parse(Msg.Arguments[3]);
-    this._name := Msg.Arguments[4];
-    this._health := Integer.Parse(Msg.Arguments[5]);
-    this._armor := Integer.Parse(Msg.Arguments[6]);
-    this._weapon := Msg.Arguments[7].GetAsWeaponType();
-    this._firingType := FireType((Integer.Parse(Msg.Arguments[8])));
-    this._mesh := BotMesh((Integer.Parse(Msg.Arguments[9])));
-    this._colour := BotColor((Integer.Parse(Msg.Arguments[10])));
-    this._currentAmmo := Integer.Parse(Msg.Arguments[11])
-  end
-  else
-  begin
+    Self._id := new UTIdentifier(Msg.Arguments[0]);
+    Self._location := UTVector.Parse(Msg.Arguments[1]);
+    Self._rotation := UTVector.Parse(Msg.Arguments[2]);
+    Self._velocity := UTVector.Parse(Msg.Arguments[3]);
+    Self._name := Msg.Arguments[4];
+    Self._health := Integer.Parse(Msg.Arguments[5]);
+    Self._armor := Integer.Parse(Msg.Arguments[6]);
+    Self._weapon := Msg.Arguments[7].GetAsWeaponType();
+    Self._firingType := FireType((Integer.Parse(Msg.Arguments[8])));
+    Self._mesh := BotMesh((Integer.Parse(Msg.Arguments[9])));
+    Self._colour := BotColor((Integer.Parse(Msg.Arguments[10])));
+    Self._currentAmmo := Integer.Parse(Msg.Arguments[11])
   end;
-  this._inventory := new Dictionary<WeaponType, UTIdentifier>()
+  Self._inventory := new Dictionary<WeaponType, UTIdentifier>()
 end;
 
 method UTBotSelfState.get_CurrentAmmo: Integer;
 begin
-  exit this._currentAmmo
+  Result := Self._currentAmmo;
 end;
 
 

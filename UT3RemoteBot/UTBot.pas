@@ -171,199 +171,181 @@ method UTBot.ProcessEvent(msg: Message);
 begin
   if msg = nil then
   begin
-    exit
+    exit;
   end;
-  case msg.&Eventof
-case EventMessage.STATE:begin
-      if msg.Info = InfoMessage.SELF_INFO then
+
+  case (msg.Event) of
+    EventMessage.BUMPED: 
       begin
-        this._selfState.UpdateState(msg)
-      end
-      else
-      begin
+        if msg.Arguments.Length = 3 then
+        begin
+          Self._botEvents.Trigger_OnBumped(new BumpedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), UTVector.Parse(msg.Arguments[2])))
+        end;
+        break;
       end;
-      this._gameState.UpdateGameState(msg);
-      break;
-    end;
-case EventMessage.INFO:begin
-      Trace.WriteLine('Connected to Server ' + _server, &Global.TRACE_NORMAL_CATEGORY);
-      this._utConnection.SendLine(Message.BuildMessage(CommandMessage.INITIALIZE, this._botName, this._botSkin.ToString(), (Integer(this._botColour)).ToString()));
-      break;
-    end;
-case EventMessage.MATCH_ENDED:begin
-      this._isInGame := false;
-      this._botEvents.Trigger_OnMatchEnded(new MatchEndedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], msg.Arguments[2]));
-      PerformGameOver();
-      break;
-    end;
-case EventMessage.WAITING_FOR_SPAWN:begin
-      Trace.WriteLine('Match Not Started. Waiting For Spawn...', &Global.TRACE_NORMAL_CATEGORY);
-      break;
-    end;
-case EventMessage.SPAWNED:begin
-      this._id := new UTIdentifier(msg.Arguments[1]);
-      this._botEvents.Trigger_OnSpawned(new BotSpawnedEventArgs());
-      this._isInGame := true;
-      break;
-    end;
-case EventMessage.DIED:begin
-      this._isInGame := false;
-      this._botEvents.Trigger_OnDied(new HasDiedEventArgs(new UTIdentifier(msg.Arguments[0]), this._id));
-      break;
-    end;
-case EventMessage.KILLED:begin
-      this._botEvents.Trigger_OnOtherBotDied(new HasDiedEventArgs(new UTIdentifier(msg.Arguments[0]), new UTIdentifier(msg.Arguments[1])));
-      break;
-    end;
-case EventMessage.SEEN_PLAYER:begin
-      if msg.Arguments.Length = 8 then
+    EventMessage.CHAT: 
       begin
-        var isReachable: Boolean := not String.IsNullOrEmpty(msg.Arguments[7]);
-        this._botEvents.Trigger_OnSeenOtherBot(new SeenBotEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], msg.Arguments[2], msg.Arguments[3], UTVector.Parse(msg.Arguments[4]), UTVector.Parse(msg.Arguments[5]), UTVector.Parse(msg.Arguments[6]), isReachable))
-      end
-      else
-      begin
+        if msg.Arguments.Length = 4 then
+        begin
+          Self._botEvents.Trigger_OnReceivedChat(new ChatEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], Boolean.Parse(msg.Arguments[2]), msg.Arguments[3]))
+        end;
+        break;
       end;
-      break;
-    end;
-case EventMessage.BUMPED:begin
-      if msg.Arguments.Length = 3 then
+    EventMessage.DAMAGED:
       begin
-        this._botEvents.Trigger_OnBumped(new BumpedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), UTVector.Parse(msg.Arguments[2])))
-      end
-      else
-      begin
+        if msg.Arguments.Length = 5 then
+        begin
+          Self._botEvents.Trigger_OnDamaged(new DamagedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Integer.Parse(msg.Arguments[2]), msg.Arguments[3], UTVector.Parse(msg.Arguments[4])))
+        end;
+        break;
       end;
-      break;
-    end;
-case EventMessage.HIT_WALL:begin
-      if msg.Arguments.Length = 3 then
+    EventMessage.DIED: 
       begin
-        this._botEvents.Trigger_OnBumpedWall(new BumpedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), UTVector.Parse(msg.Arguments[2])))
-      end
-      else
-      begin
+        Self._isInGame := false;
+        Self._botEvents.Trigger_OnDied(new HasDiedEventArgs(new UTIdentifier(msg.Arguments[0]), Self._id));
+        break;
       end;
-      break;
-    end;
-case EventMessage.HEARD_NOISE:begin
-      if msg.Arguments.Length = 3 then
+    EventMessage.FOUNDFALL: 
       begin
-        this._botEvents.Trigger_OnHeardNoise(new HeardSoundEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Single.Parse(msg.Arguments[2])))
-      end
-      else
-      begin
+        if msg.Arguments.Length = 2 then
+        begin
+          Self._botEvents.Trigger_OnFoundFall(new FallEventArgs(Boolean.Parse(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1])))
+        end;
+        break;
       end;
-      break;
-    end;
-case EventMessage.DAMAGED:begin
-      if msg.Arguments.Length = 5 then
+    EventMessage.GOT_PICKUP: 
       begin
-        this._botEvents.Trigger_OnDamaged(new DamagedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Integer.Parse(msg.Arguments[2]), msg.Arguments[3], UTVector.Parse(msg.Arguments[4])))
-      end
-      else
-      begin
+        if msg.Arguments.Length = 3 then
+        begin
+          Self._botEvents.Trigger_OnGotPickup(new PickupEventArgs(Self._selfState.AddInventoryItem(msg), Boolean.Parse(msg.Arguments[2])))
+        end;
+        break;
       end;
-      break;
-    end;
-case EventMessage.CHAT:begin
-      if msg.Arguments.Length = 4 then
+    EventMessage.HEARD_NOISE: 
       begin
-        this._botEvents.Trigger_OnReceivedChat(new ChatEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], Boolean.Parse(msg.Arguments[2]), msg.Arguments[3]))
-      end
-      else
-      begin
+        if msg.Arguments.Length = 3 then
+        begin
+          Self._botEvents.Trigger_OnHeardNoise(new HeardSoundEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Single.Parse(msg.Arguments[2])))
+        end;
+        break;
       end;
-      break;
-    end;
-case EventMessage.FOUNDFALL:begin
-      if msg.Arguments.Length = 2 then
+    EventMessage.HIT_WALL: 
       begin
-        this._botEvents.Trigger_OnFoundFall(new FallEventArgs(Boolean.Parse(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1])))
-      end
-      else
-      begin
+        if msg.Arguments.Length = 3 then
+        begin
+          Self._botEvents.Trigger_OnBumpedWall(new BumpedEventArgs(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), UTVector.Parse(msg.Arguments[2])))
+        end;
+        break;
       end;
-      break;
-    end;
-case EventMessage.TAUNTED:begin
-      if msg.Arguments.Length = 2 then
+    EventMessage.INFO: 
       begin
-        this._botEvents.Trigger_OnTaunted(new TauntedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1]))
-      end
-      else
-      begin
+        Trace.WriteLine('Connected to Server ' + _server, &Global.TRACE_NORMAL_CATEGORY);
+        Self._utConnection.SendLine(Message.BuildMessage(CommandMessage.INITIALIZE, Self._botName, Self._botSkin.ToString(), (Integer(Self._botColour)).ToString()));
+        break;
       end;
-      break;
-    end;
-case EventMessage.WEAPON_CHANGED:begin
-      if msg.Arguments.Length = 2 then
+    EventMessage.KILLED:
       begin
-        this._botEvents.Trigger_OnWeaponChanged(new WeaponChangedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1]))
-      end
-      else
-      begin
+        Self._botEvents.Trigger_OnOtherBotDied(new HasDiedEventArgs(new UTIdentifier(msg.Arguments[0]), new UTIdentifier(msg.Arguments[1])));
+        break;
       end;
-      break;
-    end;
-case EventMessage.GOT_PICKUP:begin
-      if msg.Arguments.Length = 3 then
+    EventMessage.MATCH_ENDED: 
       begin
-        this._botEvents.Trigger_OnGotPickup(new PickupEventArgs(this._selfState.AddInventoryItem(msg), Boolean.Parse(msg.Arguments[2])))
-      end
-      else
-      begin
+        Self._isInGame := false;
+        Self._botEvents.Trigger_OnMatchEnded(new MatchEndedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], msg.Arguments[2]));
+        PerformGameOver();
+        break;
       end;
-      break;
-    end;
-case EventMessage.PATH:begin
-      if msg.Arguments.Length > 0 and (msg.Arguments.Length - 1) mod 2 = 0 then
+    EventMessage.PATH: 
       begin
-        var id: String := msg.Arguments[0];
-        var nodes: List<UTNavPoint> := new List<UTNavPoint>();
-        begin {C# for loop};
-          while i < msg.Arguments.Length do begin
-            nodes.&Add(new UTNavPoint(new UTIdentifier(msg.Arguments[i]), UTVector.Parse(msg.Arguments[i + 1]), true));
-            { This is the for loop test, note that continue will skip this, while it shouldn't }
-            i := i + 2;
-          end        end;
-        this._botEvents.Trigger_OnPathReceived(new PathEventArgs(id, nodes))
-      end
-      else
-      begin
+        if ((msg.Arguments.Length > 0) and ((msg.Arguments.Length - 1) mod 2 = 0)) then
+        begin
+          var id: String := msg.Arguments[0];
+          var nodes: List<UTNavPoint> := new List<UTNavPoint>();
+          begin;
+            i: Integer := 1;
+            while (i < msg.Arguments.Length) do 
+            begin
+              nodes.&Add(new UTNavPoint(new UTIdentifier(msg.Arguments[i]), UTVector.Parse(msg.Arguments[i + 1]), true));
+              i := i + 2;
+            end;      
+          end;
+          Self._botEvents.Trigger_OnPathReceived(new PathEventArgs(id, nodes))
+        end;
+        break;
       end;
-      break;
-    end;
-  end
+    EventMessage.SEEN_PLAYER: 
+      begin
+        if msg.Arguments.Length = 8 then
+        begin
+          var isReachable: Boolean := not String.IsNullOrEmpty(msg.Arguments[7]);
+          Self._botEvents.Trigger_OnSeenOtherBot(new SeenBotEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1], msg.Arguments[2], msg.Arguments[3], UTVector.Parse(msg.Arguments[4]), UTVector.Parse(msg.Arguments[5]), UTVector.Parse(msg.Arguments[6]), isReachable))
+        end;
+        break;
+      end;
+    EventMessage.SPAWNED: 
+      begin
+        Self._id := new UTIdentifier(msg.Arguments[1]);
+        Self._botEvents.Trigger_OnSpawned(new BotSpawnedEventArgs());
+        Self._isInGame := true;
+        break;
+      end;
+    EventMessage.STATE: 
+      begin
+        if msg.Info = InfoMessage.SELF_INFO then
+        begin
+          Self._selfState.UpdateState(msg)
+        end;
+        Self._gameState.UpdateGameState(msg);
+        break;
+      end;
+    EventMessage.TAUNTED: 
+      begin
+        if msg.Arguments.Length = 2 then
+        begin
+          Self._botEvents.Trigger_OnTaunted(new TauntedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1]))
+        end;
+        break;
+      end;
+    EventMessage.WAITING_FOR_SPAWN: 
+      begin
+        Trace.WriteLine('Match Not Started. Waiting For Spawn...', &Global.TRACE_NORMAL_CATEGORY);
+        break;
+      end;
+    EventMessage.WEAPON_CHANGED: 
+      begin
+        if msg.Arguments.Length = 2 then
+        begin
+          Self._botEvents.Trigger_OnWeaponChanged(new WeaponChangedEventArgs(new UTIdentifier(msg.Arguments[0]), msg.Arguments[1]))
+        end;
+        break;
+      end;
+  end; // case (msg.Event) of
 end;
 
 method UTBot.ProcessVizEvent(msg: Message);
 begin
+  // Return if no valid message
   if msg = nil then
   begin
-    exit
-  end
-  else
-  begin
+    exit;
   end;
-  case msg.&Eventof
-case EventMessage.STATE:begin
-      if msg.Info = InfoMessage.NAV_INFO or msg.Info = InfoMessage.PICKUP_INFO then
+  // Do Command
+  case (msg.Event) of
+    EventMessage.STATE: 
       begin
-        this._map.UpdateState(msg)
-      end
-      else
-      begin
+        if ((msg.Info = InfoMessage.NAV_INFO) or (msg.Info = InfoMessage.PICKUP_INFO)) then
+        begin
+          Self._map.UpdateState(msg)
+        end;
+        break;
       end;
-      break;
-    end;
-  end
+  end; // case (msg.Event) of
 end;
 
 method UTBot.PerformGameOver();
 begin
-  this._gameState.PrintScores(Console.&Out);
-  this.Disconnect()
+  Self._gameState.PrintScores(Console.&Out);
+  Self.Disconnect()
 end;
 
 method UTBot.Run();
@@ -372,10 +354,10 @@ begin
   begin
     if Self._isInGame then
     begin
-      ProcessActions()
+      ProcessActions();
     end;
-    Thread.Sleep(500)
-  end
+    Thread.Sleep(500);
+  end;
 end;
 
 method UTBot.ProcessActions();
@@ -394,12 +376,12 @@ begin
   Trace.Listeners.&Add(tl);
   Self._utConnection := new UT3Connection(server, GAME_PORT);
   Self._utConnection.OnDataReceived += @GameDataReceived;
-  Self._utConnection.OnErrorOccurred += @GameErrorReceived;
+  Self._utConnection.OnErrorOccurred += @GameErrorOccurred;
   Self._vizConnection := new UT3Connection(server, VISUAL_PORT);
   Self._vizConnection.OnDataReceived += @VisualizerDataReceived;
-  Self._vizConnection.OnErrorOccurred += @VisualizerErrorReceived;
-  Self._botCommands := new BotCommands(this, Self._utConnection);
-  Self._botEvents := new BotEvents(this);
+  Self._vizConnection.OnErrorOccurred += @VisualizerErrorOccurred;
+  Self._botCommands := new BotCommands(Self, Self._utConnection);
+  Self._botEvents := new BotEvents(Self);
   Self._gameState := new GameState();
   Self._selfState := new UTBotSelfState(new Message(''));
   Self._map := new UTMap(Self._selfState);

@@ -54,7 +54,7 @@ type
   assembly
     //Constructor
     
-    constructor GameState();
+    constructor;
     /// <summary>
     /// List of UTBotOppState containing all the Opponent Bots that you can currently see
     /// </summary>
@@ -98,67 +98,57 @@ end;
 
 method GameState.UpdateGameState(msg: Message);
 begin
-  case msg.Info of
-
-      case InfoMessage.&BEGIN:
-      begin
-        this.Clear();
+  case (msg.Info) of
+    InfoMessage.BEGIN: 
+        Self.Clear;
+    InfoMessage.END: 
         break;
-      end;
-
-      case InfoMessage.&END:    
-      break;
-
-      case InfoMessage.PLAYER_INFO:
-      begin
-        var playerSeen: UTBotOppState := new UTBotOppState(msg);
-        Self._oppList.&Add(playerSeen);
+    InfoMessage.GAME_INFO: 
         break;
-      end;
-
-      case InfoMessage.SELF_INFO:
-      begin
-        if this._selfId = nil then
+    InfoMessage.NAV_INFO: 
         begin
-          this._selfId := new UTIdentifier(msg.Arguments[0])
+          var nav: UTNavPoint := new UTNavPoint(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Boolean.Parse(msg.Arguments[2]));
+          Self._navList.&Add(nav);
+          break;
         end;
-        break;
-      end;
-
-      case InfoMessage.NAV_INFO:
-      begin
-        var nav: UTNavPoint := new UTNavPoint(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), Boolean.Parse(msg.Arguments[2]));
-        this._navList.&Add(nav);
-        break;
-      end;
-
-      case InfoMessage.PICKUP_INFO:
-      begin
-        var item: UTItemPoint := new UTItemPoint(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), msg.Arguments[2], Boolean.Parse(msg.Arguments[3]), Boolean.Parse(msg.Arguments[4]));
-        this._invList.&Add(item);
-        break;
-      end;
-
-      case InfoMessage.GAME_INFO:    
-      break;
-      
-      case InfoMessage.SCORE_INFO:
-      begin
-        SetScores(msg);
-        if DateTime.Now > _lastCheckTime + CHECK_INTERVAL then
+    InfoMessage.PICKUP_INFO: 
         begin
-          RemoveOldScores();
-          _lastCheckTime := DateTime.Now
+          var item: UTItemPoint := new UTItemPoint(new UTIdentifier(msg.Arguments[0]), UTVector.Parse(msg.Arguments[1]), msg.Arguments[2], Boolean.Parse(msg.Arguments[3]), Boolean.Parse(msg.Arguments[4]));
+          Self._invList.&Add(item);
+          break;
         end;
-        break;
-      end;
+    InfoMessage.PLAYER_INFO: 
+        begin
+          var playerSeen: UTBotOppState := new UTBotOppState(msg);
+          Self._oppList.&Add(playerSeen);
+          break;        
+        end;
+    InfoMessage.SCORE_INFO: 
+        begin
+          SetScores(msg);
+          if DateTime.Now > _lastCheckTime + CHECK_INTERVAL then
+          begin
+            RemoveOldScores();
+            _lastCheckTime := DateTime.Now
+          end;
+          break;
+        end;
+    InfoMessage.SELF_INFO: 
+        begin
+          if (Self._selfId = nil) then
+          begin
+            Self._selfId := new UTIdentifier(msg.Arguments[0])
+          end;
+          break;
+        end;
+  end; // case (msg.Info) of
 end;
 
 method GameState.Clear();
 begin
-  this._oppList.Clear();
-  this._invList.Clear();
-  this._navList.Clear()
+  Self._oppList.Clear();
+  Self._invList.Clear();
+  Self._navList.Clear()
 end;
 
 method GameState.SetScores(msg: Message);
@@ -166,41 +156,35 @@ begin
   for each scoreInfo: String in msg.Arguments do
   begin
     var info: array of String := scoreInfo.Split(Message.MESSAGE_SUBSEPARATOR);
-    if info.Length = 3 then
+    if (info.Length = 3) then
     begin
       var id: UTIdentifier := new UTIdentifier(info[0]);
       var score: Integer := Integer(Single.Parse(info[2]));
-      if this._scores.ContainsKey(id) then
+      if Self._scores.ContainsKey(id) then
       begin
-        this._scores[id].SetScore(score)
+        Self._scores[id].SetScore(score)
       end
       else
       begin
-        this._scores.&Add(id, new UTPlayerScore(id, info[1], score))
-      end
-    end
-    else
-    begin
-    end
-  end
+        Self._scores.&Add(id, new UTPlayerScore(id, info[1], score))
+      end;
+    end;
+  end;
 end;
 
 method GameState.RemoveOldScores();
 begin
   var oldScores: List<UTPlayerScore> := new List<UTPlayerScore>();
-  for each score: UTPlayerScore in this._scores.Values do
+  for each score: UTPlayerScore in Self._scores.Values do
   begin
     if score.LastUpdated < DateTime.Now - CHECK_INTERVAL then
     begin
-      oldScores.&Add(score)
-    end
-    else
-    begin
-    end
+      oldScores.&Add(score);
+    end;
   end;
   for each score: UTPlayerScore in oldScores do
   begin
-    this._scores.&Remove(score.Id)
+    Self._scores.&Remove(score.Id);
   end
 end;
 
@@ -212,63 +196,59 @@ begin
   output.WriteLine(#13#13 + new String('-', 65) + #13);
   output.WriteLine('End Of Game Scores Were:'#13);
   output.WriteLine(idTitle.PadRight(30) + ' ' + nameTitle.PadRight(30) + ' ' + scoreTitle);
-  var scores: IOrderedEnumerable<KeyValuePair<UTIdentifier, UTPlayerScore>> := this._scores.OrderBy(score := );
-  Score;
+  var scores: IOrderedEnumerable<KeyValuePair<UTIdentifier, UTPlayerScore>> := Self._scores.OrderBy(score -> score.Value.Score);
   for each keyValue: KeyValuePair<UTIdentifier, UTPlayerScore> in scores do
   begin
-    output.WriteLine(keyValue.Value.ToString() + (iif(keyValue.Key = this._selfId, '     *YOU*', '')))
+    output.WriteLine(keyValue.Value.ToString() + (iif(keyValue.Key = Self._selfId, '     *YOU*', '')))
   end
 end;
 
 method GameState.GetBotNameFromID(BotId: UTIdentifier): String;
 begin
-  if this._scores.ContainsKey(BotId) then
+  if Self._scores.ContainsKey(BotId) then
   begin
-    exit this._scores[BotId].Name
-  end
-  else
-  begin
+    Result := Self._scores[BotId].Name
   end;
-  exit ''
+  Result := '';
 end;
 
 method GameState.IsBot(Id: UTIdentifier): Boolean;
 begin
-  exit this._scores.ContainsKey(Id)
+  Result := Self._scores.ContainsKey(Id);
 end;
 
-constructor GameState.GameState();
+constructor GameState;
 begin
 end;
 
 method GameState.get_PlayersVisible: List<UTBotOppState>;
 begin
-  exit this._oppList
+  Result := Self._oppList;
 end;
 
 method GameState.get_ItemsVisible: List<UTItemPoint>;
 begin
-  exit this._invList
+  Result := Self._invList;
 end;
 
 method GameState.get_NavPointsVisible: List<UTNavPoint>;
 begin
-  exit this._navList
+  Result := Self._navList;
 end;
 
 method GameState.get_CurrentScores: List<UTPlayerScore>;
 begin
-  exit this._scores.Values.ToList()
+  Result := Self._scores.Values.ToList();
 end;
 
 method GameState.get_FragLimit: Integer;
 begin
-  exit this._fragLimit
+  Result := Self._fragLimit;
 end;
 
 method GameState.set_FragLimit(value: Integer);
 begin
-  this._fragLimit := value
+  Self._fragLimit := value;
 end;
 
 

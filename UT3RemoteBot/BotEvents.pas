@@ -13,7 +13,7 @@ uses
 type
   BotSpawnedEventArgs = public class(EventArgs)
   assembly or protected
-    constructor BotSpawnedEventArgs();
+    constructor;
   end;
 
   HasDiedEventArgs = public class(EventArgs)
@@ -649,7 +649,7 @@ begin
   Result := _fromName;
 end;
 
-constructor FallEventArgs.FallEventArgs(DidFall: Boolean; Location: UTVector);
+constructor FallEventArgs(DidFall: Boolean; Location: UTVector);
 begin
   Self._didFall := DidFall;
   Self._location := Location
@@ -697,7 +697,7 @@ begin
   Result := _wasDropped;
 end;
 
-constructor MatchEndedEventArgs.MatchEndedEventArgs(WinnerId: UTIdentifier; WinnerName: String; Reason: String);
+constructor MatchEndedEventArgs(WinnerId: UTIdentifier; WinnerName: String; Reason: String);
 begin
   Self._winnerId := WinnerId;
   Self._winnerName := WinnerName;

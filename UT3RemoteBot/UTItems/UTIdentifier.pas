@@ -16,6 +16,7 @@ type
     constructor (id: String);
 
     method ToString: String; override;
+    method CompareTo(other: UTIdentifier): Integer;
     method GetHashCode: integer; override;
     method Equals(obj: Object): boolean; override;
     class operator Equal(obj1, obj2: UTIdentifier): boolean;
@@ -66,6 +67,11 @@ end;
 constructor UTIdentifier;
 begin
   
+end;
+
+method UTIdentifier.CompareTo(other: UTIdentifier): Integer;
+begin
+  Result := Self._id.CompareTo(other._id);
 end;
 
 end.

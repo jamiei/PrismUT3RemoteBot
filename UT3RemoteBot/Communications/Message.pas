@@ -16,7 +16,7 @@ type
     const     MESSAGE_SUBSEPARATOR: Char = ',';
     const     MESSAGE_EOL: Char = '@';
   private
-    class var     MESSAGE_EOM: array of String := String[]([#10#13]); readonly;
+    class var     MESSAGE_EOM: array of String := ([#10#13]); readonly;
     var     _event: EventMessage;
     var     _info: InfoMessage := InfoMessage.None;
     var     _args: array of String;
@@ -46,9 +46,9 @@ begin
   var lines: array of String := Data.Split(MESSAGE_EOM, StringSplitOptions.None);
   for each line: String in lines do
   begin
-    messages.&Add(new Message(line))
+    messages.&Add(new Message(line));
   end;
-  exit messages
+  exit messages;
 end;
 
 class method Message.BuildMessage(Command: CommandMessage; params Args: array of String): String;
@@ -58,9 +58,9 @@ begin
   for each arg: String in Args do
   begin
     sb.Append(MESSAGE_SEPARATOR);
-    sb.Append(arg)
+    sb.Append(arg);
   end;
-  exit sb.ToString()
+  exit sb.ToString();
 end;
 
 constructor Message(message: String);
@@ -77,46 +77,34 @@ begin
       begin
         _info := tokens[0].GetAsInfo();
         tokens.RemoveAt(0)
-      end
-      else
-      begin
       end;
       if tokens[tokens.Count - 1] = #10#13 then
       begin
         tokens.RemoveAt(tokens.Count - 1)
-      end
-      else
-      begin
       end;
-      _args := tokens.ToArray()
-    end
-    else
-    begin
-    end
-  end
-  else
-  begin
-  end
+      _args := tokens.ToArray();
+    end;
+  end;
 end;
 
 method Message.get_Event: EventMessage;
 begin
-  exit _event
+  Result := _event;
 end;
 
 method Message.get_Info: InfoMessage;
 begin
-  exit _info
+  Result := _info;
 end;
 
 method Message.get_Arguments: array of String;
 begin
-  exit _args
+  Result := _args;
 end;
 
 method Message.get_IsEvent: Boolean;
 begin
-  exit this._event <> EventMessage.STATE
+  Result := (Self._event <> EventMessage.STATE);
 end;
 
 

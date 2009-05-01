@@ -50,9 +50,6 @@ begin
   if (Self._itemType = &type) then
   begin
     exit true
-  end
-  else
-  begin
   end;
   exit false;
 end;
@@ -62,9 +59,6 @@ begin
   if ((Self._itemType = ItemType.Weapon) and (Self._actualClass = Integer(&type))) then
   begin
     exit true
-  end
-  else
-  begin
   end;
   exit false
 end;
@@ -74,9 +68,6 @@ begin
   if ((Self._itemType = ItemType.Health) and (Self._actualClass = Integer(&type))) then
   begin
     exit true
-  end
-  else
-  begin
   end;
   exit false
 end;
@@ -86,9 +77,6 @@ begin
   if ((Self._itemType = ItemType.Armor) and (Self._actualClass = Integer(&type))) then
   begin
     exit true
-  end
-  else
-  begin
   end;
   exit false
 end;
@@ -98,9 +86,6 @@ begin
   if ((Self._itemType = ItemType.Ammo) and (Self._actualClass = Integer(&type))) then
   begin
     exit true
-  end
-  else
-  begin
   end;
   exit false
 end;

@@ -69,7 +69,7 @@ begin
     end
     else
     begin
-      exit Self._id.CompareTo(other._id);
+      Result := Self._id.CompareTo(other._id);
     end
   end
 end;

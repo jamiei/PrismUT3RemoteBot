@@ -30,7 +30,7 @@ type
     method Equals(obj: Object): boolean; override;
     class operator Equal(obj1, obj2: UTVector): boolean;
     class operator NotEqual(obj1, obj2: UTVector): boolean;
-    method Parse(toParse: String): UTVector;
+    class method Parse(toParse: String): UTVector;
 
     property X: Double read get_X write set_X;
     property Y: Double read get_Y write set_Y;
@@ -136,9 +136,24 @@ begin
   Result := (obj1 <> obj2);
 end;
 
-method UTVector.Parse(toParse: String): UTVector;
+class method UTVector.Parse(toParse: String): UTVector;
+var
+  parts: Array of string;
+  x, y, z: Double;
 begin
-  // Convert UTVector.Parse when the UT3Bots.Communications.Message class is translated.
+  try
+    parts := toParse.Split(UT3Bots.Communications.Message.MESSAGE_SUBSEPARATOR);
+    for i: Integer := 0 to parts.Length - 1 do
+     begin
+       if parts[i] = '' then parts[i] := '0.0';
+     end;
+    x := Double.Parse(parts[0]);
+    y := Double.Parse(parts[1]);
+    z := Double.Parse(parts[2]);
+    Result := new UTVector(x, y, z); 
+  except
+    new ArgumentException(string.Format('Unable to parse {0} to UTVector', toParse));
+  end;
 end;
 
 end.
