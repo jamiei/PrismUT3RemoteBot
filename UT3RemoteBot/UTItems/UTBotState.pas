@@ -24,8 +24,10 @@ type
     var     _firingType: FireType;
     var     _mesh: BotMesh;
     var     _colour: BotColor;
-  assembly
+
     method UpdateState(playerMessage: Message);virtual;
+  public
+
     //Constructor
     
     constructor ();

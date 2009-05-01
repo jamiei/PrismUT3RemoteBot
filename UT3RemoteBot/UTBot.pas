@@ -67,8 +67,8 @@ type
     /// It gets called about twice a second.
     /// </summary>
     
-    method ProcessActions();virtual;
-  assembly or protected
+    method ProcessActions(); virtual;
+  public
     constructor(server: String; botName: String; botSkin: BotMesh; botColour: BotColor);
     /// <summary>
     /// Commands to control your bot

@@ -20,7 +20,7 @@ type
     /// <summary>
     /// True if the bot can run straight to this point, False if there is something in the way
     /// </summary>
-    
+  public  
     property IsReachable: Boolean read get_IsReachable;
     method get_IsReachable: Boolean;
   end;

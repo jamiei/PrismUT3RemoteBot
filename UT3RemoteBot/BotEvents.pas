@@ -25,7 +25,7 @@ type
     /// <summary>
     /// The bot that killed the other one
     /// </summary>
-    
+  public  
     property Killer: UTIdentifier read get_Killer;
     method get_Killer: UTIdentifier;
     /// <summary>
@@ -48,6 +48,7 @@ type
     var     _isReachable: Boolean;
   assembly or protected
     constructor(Id: UTIdentifier; Name: String; Team: String; Weapon: String; Rotation: UTVector; Location: UTVector; Velocity: UTVector; IsReachable: Boolean);
+  public
     /// <summary>
     /// The bot that you just saw
     /// </summary>
@@ -108,7 +109,7 @@ type
     /// <summary>
     /// The id of the bot that you just bumped
     /// </summary>
-    
+  public  
     property Id: UTIdentifier read get_Id;
     method get_Id: UTIdentifier;
     /// <summary>
@@ -135,7 +136,7 @@ type
     /// <summary>
     /// The id of the thing that made the sound
     /// </summary>
-    
+  public  
     property Id: UTIdentifier read get_Id;
     method get_Id: UTIdentifier;
     /// <summary>
@@ -161,6 +162,7 @@ type
     var     _momentum: UTVector;
   assembly or protected
     constructor(Id: UTIdentifier; Location: UTVector; DamageAmount: Integer; DamageType: String; Momentum: UTVector);
+  public
     /// <summary>
     /// The Id of the thing that damaged you
     /// </summary>
@@ -201,6 +203,7 @@ type
     var     _message: String;
   assembly or protected
     constructor(Id: UTIdentifier; FromName: String; IsFromTeam: Boolean; Message: String);
+  public
     /// <summary>
     /// The Id of the bot that just sent a chat message
     /// </summary>
@@ -233,6 +236,7 @@ type
     var     _fromName: String;
   assembly or protected
     constructor(Id: UTIdentifier; FromName: String);
+  public
     /// <summary>
     /// The Id of the bot that taunted you
     /// </summary>
@@ -253,6 +257,7 @@ type
     var     _location: UTVector;
   assembly or protected
     constructor(DidFall: Boolean; Location: UTVector);
+  public
     /// <summary>
     /// True if you fell off the ledge, false if you didn't
     /// </summary>
@@ -273,6 +278,7 @@ type
     var     _weaponClass: String;
   assembly or protected
     constructor(Id: UTIdentifier; WeaponClass: String);
+  public
     /// <summary>
     /// The Id of the weapon
     /// </summary>
@@ -293,6 +299,7 @@ type
     var     _wasDropped: Boolean;
   assembly or protected
     constructor(Item: UTItem; WasFromDrop: Boolean);
+  public
     /// <summary>
     /// The item that you picked up
     /// </summary>
@@ -314,6 +321,7 @@ type
     var     _reason: String;
   assembly or protected
     constructor(WinnerId: UTIdentifier; WinnerName: String; Reason: String);
+  public
     /// <summary>
     /// The Id of the bot that won the game
     /// </summary>
@@ -340,6 +348,7 @@ type
     var     _nodes: List<UTNavPoint>;
   assembly or protected
     constructor(Id: String; Nodes: List<UTNavPoint>);
+  public
     /// <summary>
     /// The Id that you sent in the GetPath method
     /// </summary>
@@ -373,7 +382,7 @@ type
     method Trigger_OnGotPickup(e: PickupEventArgs);
     method Trigger_OnMatchEnded(e: MatchEndedEventArgs);
     method Trigger_OnPathReceived(e: PathEventArgs);
-  assembly or protected
+  public
     constructor(Bot: UTBot);
     /// <summary>
     /// Occurs when your bot spawns on the map after joining the game, and after dying

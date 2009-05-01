@@ -16,7 +16,7 @@ type
   private
     var     _utBot: UTBot;
     var     _utConnection: UT3Connection;
-  assembly or protected
+  public
     /// <summary>
     /// Command your bot to shoot in the direction it is facing
     /// </summary>

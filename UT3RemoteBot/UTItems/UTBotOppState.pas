@@ -20,13 +20,6 @@ type
     var     _lastChatMessage: String := '';
     var     _lastUpdated: DateTime;
   assembly
-    constructor(Msg: Message);
-    /// <summary>
-    /// True if you can reach this bot, false if there is something between you (eg. A Pit)
-    /// </summary>
-    
-    property IsReachable: Boolean read get_IsReachable;
-    method get_IsReachable: Boolean;
     property CurrentAmmo: Integer read get_CurrentAmmo write set_CurrentAmmo;
     method get_CurrentAmmo: Integer;
     method set_CurrentAmmo(value: Integer);
@@ -36,6 +29,14 @@ type
     property LastUpdated: DateTime read get_LastUpdated write set_LastUpdated;
     method get_LastUpdated: DateTime;
     method set_LastUpdated(value: DateTime);
+  public
+    constructor(Msg: Message);
+    /// <summary>
+    /// True if you can reach this bot, false if there is something between you (eg. A Pit)
+    /// </summary>
+    
+    property IsReachable: Boolean read get_IsReachable;
+    method get_IsReachable: Boolean;
   end;
 
 

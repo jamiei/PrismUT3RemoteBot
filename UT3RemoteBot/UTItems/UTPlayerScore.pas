@@ -19,7 +19,7 @@ type
     var     _name: String;
     var     _score: Integer;
     var     _lastUpdated: DateTime;
-  assembly
+  public
     constructor(Id: UTIdentifier; Name: String; Score: Integer);
 
     property Id: UTIdentifier read get_Id;
@@ -35,7 +35,6 @@ type
     method get_LastUpdated: DateTime;
 
     event PropertyChanged: PropertyChangedEventHandler;
-  public
     method ToString: String; override;
     method CompareTo(other: UTPlayerScore): Integer;
   end;

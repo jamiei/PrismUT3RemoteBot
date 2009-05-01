@@ -16,7 +16,7 @@ type
     var     _id: UTIdentifier;
     var     _location: UTVector;
     method OnPropertyChanged(propName: String);virtual;
-  assembly or protected
+  public
     //Constructor
     
     constructor(Id: UTIdentifier; Location: UTVector);

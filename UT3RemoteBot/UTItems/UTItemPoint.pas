@@ -16,7 +16,7 @@ type
   private
     var     _item: UTItem;
     var     _isReadyToPickup: Boolean;
-  assembly
+  public
     //Constructor
     
     constructor(Id: UTIdentifier; Location: UTVector; &Type: String; isReachable: Boolean; isReadyToPickup: Boolean);

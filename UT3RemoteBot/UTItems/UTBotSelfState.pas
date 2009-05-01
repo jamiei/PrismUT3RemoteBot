@@ -17,11 +17,11 @@ type
     
     var     _currentAmmo: Integer;
     var     _inventory: Dictionary<WeaponType, UTIdentifier>;
-  assembly
+  assembly or protected
     method UpdateState(selfMessage: Message);override;
     method AddInventoryItem(msg: Message): UTItem;
     method GetInvetoryItemID(&type: WeaponType): UTIdentifier;
-  assembly or protected
+  public
     /// <summary>
     /// Checks to see if your bot has a weapon in it's inventory
     /// </summary>
@@ -45,7 +45,6 @@ type
     /// <returns>True if your bot is currently stood at this location</returns>
     
     method IsCloseTo(toObject: UTObject): Boolean;
-  assembly
     constructor(Msg: Message);
     /// <summary>
     /// Ammo count for your currently selected weapon

@@ -32,11 +32,10 @@ type
     method SetScores(msg: Message);
   private
     method RemoveOldScores();
-  assembly
+  public
     //Make sure that we arent holding scores for bots that have disconnected
     
     method PrintScores(output: TextWriter);
-  assembly or protected
     /// <summary>
     /// Get a Bot's name from a given Id
     /// </summary>
@@ -51,7 +50,6 @@ type
     /// <returns>True if the Id belongs to a Bot, false otherwise</returns>
     
     method IsBot(Id: UTIdentifier): Boolean;
-  assembly
     //Constructor
     
     constructor;

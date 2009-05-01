@@ -17,12 +17,15 @@ type
     var     _itemType: ItemType;
     var     _actualClass: Integer;
   assembly
+    method get_Id: UTIdentifier;
+    property Id: UTIdentifier read get_Id;
+  public
     method IsItem(&type: ItemType): Boolean;
     method IsItem(&type: WeaponType): Boolean;
     method IsItem(&type: HealthType): Boolean;
     method IsItem(&type: ArmorType): Boolean;
     method IsItem(&type: AmmoType): Boolean;
-  public  
+
     constructor(Id: String; &Type: String);
     constructor(invMessage: Message);
 
@@ -36,10 +39,9 @@ type
     /// The type of item
     /// </summary>
     property ItemType: ItemType read get_ItemType;
-    property Id: UTIdentifier read get_Id;
+
     method get_ActualClass: Integer;
     method get_ItemType: ItemType;
-    method get_Id: UTIdentifier;
   end;
 
 

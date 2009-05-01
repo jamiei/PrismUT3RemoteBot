@@ -22,7 +22,7 @@ type
     method UpdateState(Message: Message);
     method GetLocationFromId(Id: String): UTVector;
     method GetLocationFromId(Id: UTIdentifier): UTVector;
-  assembly or protected
+  public
     /// <summary>
     /// Returns the nearest UTNavPoint to your bot's current location
     /// </summary>
@@ -256,7 +256,6 @@ type
     /// <returns>The closest UTItemPoint of that type to that location</returns>
     
     method GetNearestItem(&type: ArmorType; location: UTVector; toExclude: UTItemPoint): UTItemPoint;
-  assembly
     //Constructor
     
     constructor(theBot: UTBotSelfState);
